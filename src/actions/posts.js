@@ -17,8 +17,7 @@ export const createPost = (post) => async (dispatch) => {
     try {
         const completeData = {...post, createdAt: Date.now()};
         console.log('MSG IS', completeData);
-        console.log('POST IS', post);
-        const { data } = await api.createPost(post);
+        const { data } = await api.createPost(completeData);
 
         dispatch({ type: CREATE, payload: data });
     } catch (error) {
@@ -28,7 +27,9 @@ export const createPost = (post) => async (dispatch) => {
 
 export const updatePost = (id, post) => async (dispatch) => {
     try {
-        const { data } = await api.updatePost(id, post);
+        const completeData = {...post, createdAt: Date.now()};
+        console.log('MSG IS', completeData);
+        const { data } = await api.updatePost(id, completeData);
 
         dispatch({ type: UPDATE, payload: data });
     } catch (error) {
