@@ -9,7 +9,7 @@ import { createPost, updatePost } from '../../actions/posts';
 //Get the current ID
 
 const Form = ({ currentId, setCurrentId}) => {
-    const [postData, setPostData] = useState({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
+    const [postData, setPostData] = useState({ creator: '', title: '', message: '', tags: '', selectedFile: '', createdAt: ''});
     const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId): null);
 
     const classes = useStyles();
@@ -21,7 +21,8 @@ const Form = ({ currentId, setCurrentId}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        setPostData({ ...postData, createdAt: Date.now()})
+        console.log('SOSOOSOSOSO ', postData);
         if (currentId) {
             dispatch(updatePost(currentId, postData));
         } else {

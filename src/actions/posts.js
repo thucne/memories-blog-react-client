@@ -15,6 +15,9 @@ export const getPosts = () => async (dispatch) => {
 
 export const createPost = (post) => async (dispatch) => {
     try {
+        const completeData = {...post, createdAt: Date.now()};
+        console.log('MSG IS', completeData);
+        console.log('POST IS', post);
         const { data } = await api.createPost(post);
 
         dispatch({ type: CREATE, payload: data });
