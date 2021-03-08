@@ -29,7 +29,7 @@ const ChatFeed = (props) => {
           margin: '3px 3px 3px 0px'
         }}
       >
-        <Avatar className="purple" alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
+        <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
       </div>
     )
 
