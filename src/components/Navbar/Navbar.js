@@ -19,6 +19,7 @@ const Navbar = () => {
         dispatch({type: 'LOGOUT'});
         history.push('/');
         setUser(null);
+        setIsChat(false);
         }, [dispatch, history]
     )
 
