@@ -1,10 +1,12 @@
 import MyMessage from './MyMessage';
 import TheirMessage from './TheirMessage';
 import MessageForm from './MessageForm';
+import { Avatar } from '@material-ui/core';
+import useStyles from './styles';
 
 const ChatFeed = (props) => {
   const { chats, activeChat, userName, messages } = props;
-
+  const classes = useStyles();
   const chat = chats && chats[activeChat];
   const user = JSON.parse(localStorage.getItem('profile'));
   const renderReadReceipts = (message, isMyMessage) => chat.people.map((person, index) => person.last_read === message.id && (
@@ -27,7 +29,7 @@ const ChatFeed = (props) => {
           margin: '3px 3px 3px 0px'
         }}
       >
-        <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
+        <Avatar className="purple" alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
       </div>
     )
 
