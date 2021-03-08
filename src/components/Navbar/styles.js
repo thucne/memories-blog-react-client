@@ -19,7 +19,6 @@ export default makeStyles((theme) => ({
   },
   image: {
     marginLeft: '15px',
-    // display: 'flex',
   },
   toolbar: {
     display: 'flex',
@@ -35,6 +34,7 @@ export default makeStyles((theme) => ({
   userName: {
     display: 'flex',
     alignItems: 'center',
+    margin: '2px 2px 2px 2px'
   },
   brandContainer: {
     display: 'flex',
@@ -43,6 +43,16 @@ export default makeStyles((theme) => ({
   purple: {
     color: theme.palette.getContrastText(deepPurple[500]),
     backgroundColor: deepPurple[500],
+    display: 'flex',
+    alignItems: 'center',
+    postion: 'inherit',
+    top: '15px',
+    marginRight: '10px'
+  },
+  chatting: {
+    // backgroundColor: 'blue',
+    // alignItems: 'center',
+    // margin: '2px 2px 2px 2px'
   },
   [theme.breakpoints.down('sm')]: {
     appBar: {
@@ -59,6 +69,9 @@ export default makeStyles((theme) => ({
     },
     brandContainer: {
       display: 'flex',
+    },
+    purple: {
+      top: '5px',
     }
   },
   [theme.breakpoints.down('xs')]: {

@@ -12,6 +12,7 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const location = useLocation();
+    const [isChat, setIsChat] = useState(false);
 
     const logout = useCallback(
         () => {
@@ -20,7 +21,6 @@ const Navbar = () => {
         setUser(null);
         }, [dispatch, history]
     )
-    
 
     useEffect(() => {
         const token = user?.token;
@@ -46,6 +46,13 @@ const Navbar = () => {
                         <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
                         <Typography className={classes.userName} variant="h6">{user.result.name}</Typography>
                         <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>Log out</Button>
+                        {
+                            !isChat ? (
+                                <Button component={Link} to='/chat' variant="contained" className={classes.chatting} color="primary" style={{marginLeft: '5px'}} onClick={() => {setIsChat(true)}}>Chatting</Button>
+                            ) : (
+                                <Button component={Link} to='/' variant="contained" className={classes.chatting} color="primary" style={{marginLeft: '5px'}} onClick={() => {setIsChat(false)}}>Back</Button>
+                            )
+                        }
                     </div>
                 ) : (
                     <Button component={Link} to="/auth" variant="contained" color="primary">Sign in</Button>

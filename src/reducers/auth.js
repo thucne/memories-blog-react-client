@@ -22,21 +22,30 @@ const authReducer = async (state = { authData: null }, action) => {
                 'last_name': user?.result?.email
             };
             console.log(authObject);
-            axios.post(
+
+            await axios.get(
                 'https://api.chatengine.io/projects/people/',
-                authObject,
                 { headers: { "Private-Key": 'd09e548d-c0e8-4383-b0ff-585ff2c19076' } }
             )
             .then((response) => {
-                console.log(response.data);
+                console.log('HIHI', response.data);
+                let allUsers = response.data;
+                let isUserExit = allUsers.filter((user) => {return user.username === authObject.username});
+                if (isUserExit.length > 0) {
+
+                } else {
+                    axios.post(
+                        'https://api.chatengine.io/projects/people/',
+                        authObject,
+                        { headers: { "Private-Key": 'd09e548d-c0e8-4383-b0ff-585ff2c19076' } }
+                    )
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => console.log(error));
+                }
             })
-            .catch((error) => console.log(error));
-            axios.get(
-                'https://api.chatengine.io/projects/people/',
-                { headers: { "Private-Key": 'd09e548d-c0e8-4383-b0ff-585ff2c19076' } }
-            )
-            .then((response) => console.log('HIHI', response.data))
-            .catch((error) => console.log(error))
+            .catch((error) => console.log(error))            
 
             return { ...state, authData: action?.data };
         default:
