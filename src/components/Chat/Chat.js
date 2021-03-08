@@ -19,7 +19,7 @@ const Chat = () => {
         userName={`${user?.result?.email}chat`}
         userSecret={`${user?.result?.email}chat1`}
         renderChatFeed={(chatAppProps) => <ChatFeed {...chatAppProps} />}
-        onNewMessage={() => new Audio('https://chat-engine-assets.s3.amazonaws.com/click.mp3').play()}
+        onNewMessage={() => new Audio('https://res.cloudinary.com/katyperrycbt/video/upload/v1615222391/juntos-607_k7pgr8.ogg').play()}
     />
     )
 }
