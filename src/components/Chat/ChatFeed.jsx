@@ -8,15 +8,29 @@ const ChatFeed = (props) => {
   const chat = chats && chats[activeChat];
   const user = JSON.parse(localStorage.getItem('profile'));
   const renderReadReceipts = (message, isMyMessage) => chat.people.map((person, index) => person.last_read === message.id && (
-    <div
-      key={`read_${index}`}
-      className="read-receipt"
-      style={{
-        float: isMyMessage ? 'right' : 'right',
-        backgroundImage: person.person.avatar ? `url(${person.person.avatar})` : `url(${user?.result?.selectedFile})`,
-        margin: '3px 3px 3px 0px'
-      }}
-    />
+    person.person.avatar ? (
+      <div
+        key={`read_${index}`}
+        className="read-receipt"
+        style={{
+          float: isMyMessage ? 'right' : 'right',
+          backgroundImage: person.person.avatar && `url(${person.person.avatar})`,
+          margin: '3px 3px 3px 0px'
+        }}
+      />
+    ) : (
+      <div
+        key={`read_${index}`}
+        className="read-receipt"
+        style={{
+          float: isMyMessage ? 'right' : 'right',
+          margin: '3px 3px 3px 0px'
+        }}
+      >
+        <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
+      </div>
+    )
+
   ));
 
   const renderMessages = () => {
