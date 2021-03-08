@@ -48,7 +48,8 @@ const ChatFeed = (props) => {
             alignItems: 'center', 
             top: '50px',
             margin: '3px 3px 3px 0px',
-            fontSize: '8px'
+            fontSize: '8px',
+            color: 'white'
           }}
         >
           {`${person.person.username.charAt(0).toUpperCase()}${person.person.username.charAt(1).toUpperCase()}`}
