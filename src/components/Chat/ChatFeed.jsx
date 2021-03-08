@@ -1,39 +1,62 @@
 import MyMessage from './MyMessage';
 import TheirMessage from './TheirMessage';
 import MessageForm from './MessageForm';
-import { Avatar } from '@material-ui/core';
-import useStyles from './styles';
+import { useState } from 'react';
 
 const ChatFeed = (props) => {
   const { chats, activeChat, userName, messages } = props;
-  const classes = useStyles();
   const chat = chats && chats[activeChat];
-  const user = JSON.parse(localStorage.getItem('profile'));
-  const renderReadReceipts = (message, isMyMessage) => chat.people.map((person, index) => person.last_read === message.id && (
-    person.person.avatar ? (
-      <div
-        key={`read_${index}`}
-        className="read-receipt"
-        style={{
-          float: isMyMessage ? 'right' : 'right',
-          backgroundImage: person.person.avatar && `url(${person.person.avatar})`,
-          margin: '3px 3px 3px 0px'
-        }}
-      />
-    ) : (
-      <div
-        key={`read_${index}`}
-        className="read-receipt"
-        style={{
-          float: isMyMessage ? 'right' : 'right',
-          margin: '3px 3px 3px 0px'
-        }}
-      >
-        <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>
-      </div>
-    )
+  const [color, setColor] = useState('rgb(100,100,100)');
+  const [isSetColor, setIsSetColor] = useState(false);
 
-  ));
+  const random_rgba = () => {
+    var o = Math.round, r = Math.random, s = 255;
+    return 'rgb(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ')';
+  }
+
+  const randomColor = () => {
+    if (!isSetColor) {
+      setColor(random_rgba);
+      setIsSetColor(true);
+    }
+    return color;
+  }
+
+  const renderReadReceipts = (message, isMyMessage) => chat.people.map((person, index) => {
+    if (person.last_read === message.id && person.person.avatar) {
+      return (
+        <div
+          key={`read_${index}`}
+          className="read-receipt"
+          style={{
+            float: isMyMessage ? 'right' : 'right',
+            backgroundImage: person.person.avatar && `url(${person.person.avatar})`,
+            margin: '3px 3px 3px 0px'
+          }}
+        />
+      )
+    } else if (person.last_read === message.id && !person.person.avatar) {
+      randomColor();
+      return (
+        <div
+          key={`read_${index}`}
+          className="read-receipt"
+          style={{
+            float: isMyMessage ? 'right' : 'right',
+            backgroundColor: `${color}`, 
+            display: 'inline', 
+            alignItems: 'center', 
+            top: '50px',
+            margin: '3px 3px 3px 0px',
+            fontSize: '8px'
+          }}
+        >
+          {`${person.person.username.charAt(0).toUpperCase()}${person.person.username.charAt(1).toUpperCase()}`}
+        </div>
+      )
+    }
+    return false;
+  });
 
   const renderMessages = () => {
     const keys = Object.keys(messages);
