@@ -7,9 +7,7 @@ import Home from './components/Home/Home';
 import Auth from './components/Auth/Auth';
 import Chat from './components/Chat/Chat';
 
-const user = JSON.parse(localStorage.getItem('profile'));
 const App = () => {
-
     return (
         <BrowserRouter>
             <Container maxwidth="lg">
@@ -17,9 +15,7 @@ const App = () => {
                 <Switch>
                     <Route path="/" exact component={Home}/>
                     <Route path="/auth" exact component={Auth}/>
-                    {
-                        user && <Route path="/chat" exact component={Chat}/>
-                    }
+                    <Route path="/chat" exact component={Chat}/>
                 </Switch>
             </Container>
         </BrowserRouter>
