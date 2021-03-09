@@ -14,7 +14,7 @@ const Chat = () => {
 
     if (user) return (
         <ChatEngine
-        projectID={process.env.REACT_APP_SOCKET || '9f64e68c-0d84-4635-85ae-6fddc0309bd5'}
+        projectID={process.env.REACT_APP_SOCKET}
         height="100vh"
         userName={`${user?.result?.email}chat`}
         userSecret={`${user?.result?.email}chat1`}

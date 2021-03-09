@@ -1,7 +1,8 @@
 import { AUTH, LOGOUT } from '../constants/actionTypes';
 import axios from 'axios';
+import dotenv from 'dotenv';
 
-
+dotenv.config();
 
 const authReducer = async (state = { authData: null }, action) => {
     let user = '';
@@ -25,7 +26,7 @@ const authReducer = async (state = { authData: null }, action) => {
 
             await axios.get(
                 'https://api.chatengine.io/projects/people/',
-                { headers: { "Private-Key": 'd09e548d-c0e8-4383-b0ff-585ff2c19076' } }
+                { headers: { "Private-Key": process.env.REACT_APP_SOCKET_SECRET } }
             )
             .then((response) => {
                 console.log('HIHI', response.data);
