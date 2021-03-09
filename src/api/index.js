@@ -1,6 +1,9 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
 
-const API = axios.create({ baseURL: 'https://memories-of-me.herokuapp.com'});
+dotenv.config()
+
+const API = axios.create({ baseURL: process.env.REACT_APP_SERVER_URL});
 
 API.interceptors.request.use((req) => {
     if (localStorage.getItem('profile')) {
