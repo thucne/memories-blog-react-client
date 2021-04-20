@@ -1,0 +1,8 @@
+src/    @katyperrycbt
+.gitignore  @katyperrycbt
+CODEOWNERS  @katyperrycbt
+build/     @katyperrycbt
+public/     @katyperrycbt
+README.md   @katyperrycbt
+CODE_OF_CONDUCT.md @katyperrycbt
+package.json   @katyperrycbt
