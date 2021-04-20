@@ -4,7 +4,8 @@
 * This is a front-end project about a web application called "Memories Blog", also is a part of a full-stack (MERN) project that has the same name.
 * Main language: a lot of JavaScript such as ReactJS framework, create-react-app MVC, Material-UI, APIs, etc...
 * Functionalities: a complete CRUD application.
-* Deploying: successfully
+* Deploying: successfully.
+* Extra functions: auto mailing.
 
 ## Discussion: 
 If you have any problems with the code or do not understand some part of the code, you can discuss with [me](mailto:katyperrycbt@gmail.com). Happy coding!
