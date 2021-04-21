@@ -161,7 +161,7 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                             onChange={handleFileRead}
                             size="small"
                             variant="outlined"
-                            require={currentId === 0}
+                            required={currentId === 0}
                         />
                         <Button startIcon={<CloudUploadIcon />} className={`${classes.buttonSubmit} ${classes.uploadMemory}`} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
                         <Button className={classes.clearMemory} variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>

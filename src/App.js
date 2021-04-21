@@ -13,6 +13,8 @@ import { getNoti } from './actions/noti';
 import { useDispatch } from 'react-redux';
 
 import useStyles from './styles';
+
+import MailCustom from './components/Mail/Mail';
 //sda
 const App = () => {
     const [linear, setLinear] = useState(false);
@@ -41,6 +43,7 @@ const App = () => {
                     <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} />} />
                     <Route path="/chat" exact render={props => <Chat {...props} setLinear={setLinear} />} />
                     <Route path="/info" exact render={props => <Info {...props} setLinear={setLinear} setIsInfo={setIsInfo} setSearchKey={setSearchKey} searchKey={searchKey}/>} />
+                    <Route path="/mail" exact render={props => <MailCustom {...props}/>} />
                 </Switch>
             </Container>
         </BrowserRouter>
