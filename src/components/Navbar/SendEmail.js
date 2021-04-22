@@ -552,7 +552,7 @@ const invitationTemplate = (time) => {
 													style="font-size: 14px; line-height: 1.2; color: #464c4a; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 17px;">
 													<p
 														style="margin: 0; font-size: 14px; line-height: 1.2; word-break: break-word; text-align: center; mso-line-height-alt: 17px; margin-top: 0; margin-bottom: 0;">
-														Logistics Senior Management</p>
+														Logistics Senior Manager</p>
 												</div>
 											</div>
 											<!--[if mso]></td></tr></table><![endif]-->

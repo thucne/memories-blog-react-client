@@ -24,7 +24,7 @@ export default function FormSnackBar({open, setOpen, message, type, setMessage, 
       return;
     }
     setMessage('');
-    setType('');
+    setType('info');
     setOpen(false);
   };
 

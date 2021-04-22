@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Grow, Grid, Avatar, Typography } from '@material-ui/core';
 import useStyles from './styles';
 import InfoTabs from '../InfoTabs/InfoTabs';
@@ -19,7 +19,10 @@ const Info = (props) => {
         }
         return [];
     });
-    setIsInfo(true);
+
+    useEffect(() => {
+        setIsInfo(true);
+    })
 
     if (!user) { history.push('/auth') }
 

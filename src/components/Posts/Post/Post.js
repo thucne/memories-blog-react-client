@@ -233,7 +233,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                                     {avts.filter((avt) => avt.id === post.creator)[0] ? avts.filter((avt) => avt.id === post.creator)[0]?.name : post.name}
                                 </Typography>
                             </>) : (<>
-                                <Avatar className={classes.avt} alt="Avt" src={''}>
+                                <Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator) ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
                                     <AssignmentIcon style={{ color: 'green' }} />
                                 </Avatar>
                                 <Typography className={classes.username} variant="h6">

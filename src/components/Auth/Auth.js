@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Avatar, Button, Paper, Grid, Typography, Container, CircularProgress, Tooltip } from '@material-ui/core';
+import { Avatar, Button, Paper, Grid, Typography, Container, CircularProgress, Tooltip, TextField } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import FileBase from 'react-file-base64';
+// import FileBase from 'react-file-base64';
 
 import useStyles from './styles';
 import Input from './Input';
@@ -15,6 +15,8 @@ import { signin, signup } from '../../actions/auth';
 import dotenv from 'dotenv';
 
 import ModalNotification from '../ModalNotification/ModalNotification';
+
+// import { ReCaptcha } from 'react-recaptcha-v3';
 
 dotenv.config();
 
@@ -34,7 +36,12 @@ const Auth = (props) => {
     const [progress, setProgress] = useState(false);
     const [errors, setErrors] = useState(undefined);
     const [success, setSuccess] = useState(undefined);
+    const [invitedCode, setInvitedCode] = useState('');
+
     const { setLinear } = props;
+
+    // const recaptcha = useRef(null);
+
     const noti = useSelector((state) => {
         if (state.noti.noti.length) {
             return state.noti.noti.filter((no) => no.link === '/auth')
@@ -42,36 +49,49 @@ const Auth = (props) => {
         return [];
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (setLinear) {
-            setLinear(true);
-        }
-        setProgress(true);
+    const submitData = () => {
         if (isSignup) {
-            dispatch(signup(formData, history)).then((result) => {
+            if (invitedCode === 'c191d2e6-0334-404e-ab5a-8166c8dda594') {
+                dispatch(signup(formData, history)).then((result) => {
 
-                if (result.message) {
+                    if (result.message) {
+                        setProgress(false);
+                        setTimeout(() => {
+                            if (setLinear) {
+                                setLinear(false);
+                            }
+                        }, 1000);
+                        setErrors(result);
+                    } else {
+                        setSuccess({ message: 'Create succesfully!' });
+                        setTimeout(() => {
+                            setProgress(false);
+                            if (setLinear) {
+                                setLinear(false);
+                            }
+                            history.push('/');
+                        }, 1000);
+                    }
+                }).catch((error) => {
+                    console.log(error);
                     setProgress(false);
                     setTimeout(() => {
                         if (setLinear) {
                             setLinear(false);
                         }
                     }, 1000);
-                    setErrors(result);
-                } else {
-                    setSuccess({ message: 'Create succesfully!' });
-                    setTimeout(() => {
-                        setProgress(false);
-                        if (setLinear) {
-                            setLinear(false);
-                        }
-                        history.push('/');
-                    }, 1000);
-                }
-            }).catch((error) => {
-                console.log(error);
-            });
+                    setErrors(error);
+                });
+            } else {
+                setProgress(false);
+                setTimeout(() => {
+                    if (setLinear) {
+                        setLinear(false);
+                    }
+                }, 1000);
+                setErrors({message: 'Incorrect invitation code'});
+            }
+
         } else {
             dispatch(signin(formData, history)).then((result) => {
                 if (result.message) {
@@ -94,8 +114,29 @@ const Auth = (props) => {
                 }
             }).catch((error) => {
                 console.log(error);
+                setProgress(false);
+                setTimeout(() => {
+                    if (setLinear) {
+                        setLinear(false);
+                    }
+                }, 1000);
+                setErrors(error);
             });
         }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (setLinear) {
+            setLinear(true);
+        }
+        setProgress(true);
+
+        window.grecaptcha.ready(() => {
+            window.grecaptcha.execute(process.env.REACT_APP_RECAPTCHA, { action: 'submit' }).then(token => {
+                submitData();
+            });
+        });
     }
 
     const handleChange = (e) => {
@@ -143,9 +184,28 @@ const Auth = (props) => {
             return;
         }
 
-        setErrors(false);
+        setErrors(undefined);
+        setSuccess(undefined);
     };
 
+    const handleFileRead = async (event) => {
+        const file = event.target.files[0]
+        const base64 = await convertBase64(file);
+        setFormData({ ...formData, avt: base64 })
+    }
+
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            }
+            fileReader.onerror = (error) => {
+                reject(error);
+            }
+        })
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -157,7 +217,7 @@ const Auth = (props) => {
                 </Snackbar>
             }
             {
-                noti.length ? <ModalNotification noti={noti}/> : <></>
+                noti.length ? <ModalNotification noti={noti} /> : <></>
             }
 
             <Paper className={classes.paper} elevation={3}>
@@ -184,7 +244,22 @@ const Auth = (props) => {
                                         isSignup && (
                                             <>
                                                 <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" />
-                                                <div className={classes.fileInput}><FileBase type="file" required multiple={false} onDone={({ base64 }) => setFormData({ ...formData, avt: base64 })} /></div>
+                                                <Grid item xs={12} sm={12}>
+                                                    <TextField
+                                                        id="originalFileName2"
+                                                        type="file"
+                                                        inputProps={{ accept: 'image/*' }}
+                                                        InputLabelProps={{ shrink: true, color: "primary" }}
+                                                        label="Avatar"
+                                                        name="originalFileName"
+                                                        onChange={handleFileRead}
+                                                        size="small"
+                                                        variant="outlined"
+                                                        required
+                                                        fullWidth
+                                                    />
+                                                </Grid>
+                                                <Input name="invitedCode" label="Invitation Code" handleChange={(e) => setInvitedCode(e.target.value)} type="text" />
                                             </>
                                         )
                                     }
@@ -197,15 +272,14 @@ const Auth = (props) => {
                                 <GoogleLogin
                                     clientId={process.env.REACT_APP_GG_CLIENTID}
                                     render={(renderProps) => (
-                                        <Tooltip title="Sorry! This kind of login is no longer exist!">
+                                        <Tooltip title="Creating new account bases on your Google account">
                                             <Button
                                                 className={classes.googleButton}
                                                 color="primary"
                                                 fullWidth
-                                                // onClick={renderProps.onClick}
+                                                onClick={renderProps.onClick}
                                                 startIcon={<Icon />}
                                                 variant="contained"
-                                                style={{ opacity: 0.5, display: 'none' }}
                                             >
                                                 Google
                                             </Button>
@@ -216,10 +290,10 @@ const Auth = (props) => {
                                     cookiePolicy="single_host_origin"
                                 />
 
-                                <Grid container justify="flex-end" style={{display: 'none'}}>
+                                <Grid container justify="flex-end">
                                     <Grid item>
-                                        <Tooltip title="Sorry! This app is not for everyone, if you're UPXI, you'll know what to do!">
-                                            <Button style={{ opacity: 0.5 }}>
+                                        <Tooltip title="Let's create an account!">
+                                            <Button onClick={switchMode}>
                                                 {
                                                     isSignup ? 'Already have an account? Sign in' : 'Sign up'
                                                 }

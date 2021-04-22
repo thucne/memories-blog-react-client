@@ -32,7 +32,7 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
     const isDone = useSelector((state) => { return state.posts });
     const [open, setOpen] = useState(false);
     const [snackMSG, setSnackMSG] = useState('');
-    const [snackType, setSnackType] = useState('');
+    const [snackType, setSnackType] = useState('info');
 
     useEffect(() => {
         if (post) {
@@ -44,13 +44,7 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
         }
     }, [post, isDone, setLinear]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setProgress(true);
-        setLinear(true);
-        if (setIsLoad) setIsLoad(true);
-        console.log(postData);
-
+    const submitData = () => {
         if (currentId === 0) {
             dispatch(createPost({ ...postData, name: user?.result?.name }))
                 .then((result) => {
@@ -92,6 +86,21 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                     if (setIsLoad) setIsLoad(false);
                 });
         }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setProgress(true);
+        setLinear(true);
+        if (setIsLoad) setIsLoad(true);
+        console.log(postData);
+
+        window.grecaptcha.ready(() => {
+            window.grecaptcha.execute(process.env.REACT_APP_RECAPTCHA, { action: 'submit' }).then(token => {
+                submitData();
+            });
+        });
+
     }
 
     if (!user?.result?.name) {
@@ -162,6 +171,7 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                             size="small"
                             variant="outlined"
                             required={currentId === 0}
+                            fullWidth
                         />
                         <Button startIcon={<CloudUploadIcon />} className={`${classes.buttonSubmit} ${classes.uploadMemory}`} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
                         <Button className={classes.clearMemory} variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>

@@ -76,7 +76,7 @@ export default makeStyles((theme) => ({
   reload: {
     position: 'fixed',
     bottom: '20px',
-    right: '20px',
+    left: '20px',
     backgroundColor: 'yellow',
     zIndex: 5000,
     opacity: 0.7

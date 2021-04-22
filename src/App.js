@@ -23,8 +23,30 @@ const App = () => {
     const classes = useStyles();
 
     useEffect(() => {
+        const loadScriptByURL = (id, url, callback) => {
+            const isScriptExist = document.getElementById(id);
+
+            if (!isScriptExist) {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = url;
+                script.id = id;
+                script.onload = function () {
+                    if (callback) callback();
+                };
+                document.body.appendChild(script);
+            }
+
+            if (isScriptExist && callback) callback();
+        }
+
+        // load the script by passing the URL
+        loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_RECAPTCHA}`, function () {
+            console.log("Script loaded!");
+        });
         dispatch(getNoti());
-    });
+    }, [dispatch]);
+
 
     return (
         <BrowserRouter>
@@ -38,10 +60,10 @@ const App = () => {
             <Container maxWidth="lg">
                 <Navbar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey} />
                 <Switch>
-                    <Route path="/" exact render={props => <Home {...props} setLinear={setLinear} setIsInfo={setIsInfo(false)} setSearchKey={setSearchKey} searchKey={searchKey}/>}/>
+                    <Route path="/" exact render={props => <Home {...props} setLinear={setLinear} setIsInfo={setIsInfo(false)} setSearchKey={setSearchKey} searchKey={searchKey} />} />
                     <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} />} />
                     <Route path="/chat" exact render={props => <Chat {...props} setLinear={setLinear} />} />
-                    <Route path="/info" exact render={props => <Info {...props} setLinear={setLinear} setIsInfo={setIsInfo} setSearchKey={setSearchKey} searchKey={searchKey}/>} />
+                    <Route path="/info" exact render={props => <Info {...props} setLinear={setLinear} setIsInfo={setIsInfo} setSearchKey={setSearchKey} searchKey={searchKey} />} />
                 </Switch>
             </Container>
         </BrowserRouter>
