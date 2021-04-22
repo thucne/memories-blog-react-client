@@ -238,7 +238,7 @@ const Auth = (props) => {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
             }
             {
-                showStepper && <StepperCustom activeStep={1} setDoneCreate={setDoneCreate} result={result} token={token} />
+                showStepper && <StepperCustom setLinear={setLinear} activeStep={1} setDoneCreate={setDoneCreate} result={result} token={token} />
             }
 
             <Paper className={classes.paper} elevation={3}>

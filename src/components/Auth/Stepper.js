@@ -23,7 +23,7 @@ function getSteps() {
     return ['Logged in by your Google Account', 'Create a linked MEmories Account'];
 }
 
-export default function StepperCustom({ activeStep, setDoneCreate, result, token }) {
+export default function StepperCustom({ activeStep, setDoneCreate, result, token, setLinear }) {
     const classes = useStyles();
     const steps = getSteps();
     const user = JSON.parse(localStorage.getItem('profile'));
@@ -40,7 +40,7 @@ export default function StepperCustom({ activeStep, setDoneCreate, result, token
                 ))}
             </Stepper>
             </div>}
-            result={result} token={token} setDoneCreate={setDoneCreate} ggAvt={user?.result?.imageUrl || ''} ggFirstName={user?.result?.familyName || ''} ggLastName={user?.result?.givenName || ''} ggEmail={user?.result?.email || ''} ggId={user?.result?.googleId || ''} />
+            setLinear={setLinear} results={result} token={token} setDoneCreate={setDoneCreate} ggAvt={user?.result?.imageUrl || ''} ggFirstName={user?.result?.familyName || ''} ggLastName={user?.result?.givenName || ''} ggEmail={user?.result?.email || ''} ggId={user?.result?.googleId || ''} />
         </div>
     );
 }

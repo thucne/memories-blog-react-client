@@ -12,13 +12,15 @@ import { Typography } from '@material-ui/core';
 import { signup } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-export default function NewGGUser({ result, token, myStepper, setDoneCreate, setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
+
+export default function NewGGUser({ results, token, myStepper, setDoneCreate, setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
 
     const inititalState = { firstName: (ggFirstName || ''), lastName: (ggLastName || ''), email: (ggEmail || ''), ggId: (ggId || ''), avt: (ggAvt || ''), invitationCode: '' };
     const dispatch = useDispatch();
     const history = useHistory();
-
+    const [open2, setOpen2] = useState(false);
     const classes = useStyle();
     const [formData, setFormData] = useState(inititalState);
 
@@ -32,6 +34,7 @@ export default function NewGGUser({ result, token, myStepper, setDoneCreate, set
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setOpen2(true);
         if (setLinear) {
             setLinear(true);
         }
@@ -45,14 +48,15 @@ export default function NewGGUser({ result, token, myStepper, setDoneCreate, set
                         setLinear(false);
                         setErrMsg(result.message);
                         setOpenErr(true);
+                        setOpen2(false);
                     }
                 }, 1000);
 
                 window.location.reload();
 
             } else {
-                if (result && token) {
-                    dispatch({ type: 'AUTH', data: { result, token } });
+                if (results && token) {
+                    dispatch({ type: 'AUTH', data: { result: results, token } });
                 }
                 setTimeout(() => {
                     if (setDoneCreate) {
@@ -61,6 +65,8 @@ export default function NewGGUser({ result, token, myStepper, setDoneCreate, set
                     if (setLinear) {
                         setLinear(false);
                         setOpen(true);
+                        setOpen2(false);
+
                     }
                     history.push('/');
                 }, 1000);
@@ -68,6 +74,8 @@ export default function NewGGUser({ result, token, myStepper, setDoneCreate, set
         }).catch((error) => {
             console.log(error);
             if (setLinear) setLinear(false);
+            setOpen2(false);
+
         });
     }
 
@@ -102,9 +110,12 @@ export default function NewGGUser({ result, token, myStepper, setDoneCreate, set
                             <Button onClick={handleClose} color="primary">
                                 Cancel
                             </Button>
-                            <Button type='submit' color="primary">
-                                Create
-                            </Button>
+                            {
+                                open2 ? <CircularProgress color="secondary" /> : 
+                                <Button type='submit' color="primary">
+                                    Create
+                                </Button>
+                            }
                         </DialogActions>
                     </form>
                 </DialogContent>
