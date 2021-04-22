@@ -13,6 +13,7 @@ import { signup } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 export default function NewGGUser({ results, token, myStepper, setDoneCreate, setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
@@ -23,6 +24,8 @@ export default function NewGGUser({ results, token, myStepper, setDoneCreate, se
     const [open2, setOpen2] = useState(false);
     const classes = useStyle();
     const [formData, setFormData] = useState(inititalState);
+    const [openSnack, setOpenSnack] = useState(false);
+    const [snackMessage, setSnackMessage] = useState('');
 
     const handleClose = () => {
         if (setFormShow) setFormShow(false);
@@ -75,12 +78,27 @@ export default function NewGGUser({ results, token, myStepper, setDoneCreate, se
             console.log(error);
             if (setLinear) setLinear(false);
             setOpen2(false);
-
+            setSnackMessage(error.message);
+            setOpenSnack(true);
         });
     }
 
+    const handleCloseSnack = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnack(false);
+        setSnackMessage('');
+    };
+
     return (
         <div>
+            {
+                <Snackbar open={openSnack} autoHideDuration={2000} onClose={handleCloseSnack}>
+                    {snackMessage}
+                </Snackbar>
+            }
             <Dialog open={formShow ? formShow : true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Create account</DialogTitle>
                 <DialogContent>
@@ -111,9 +129,9 @@ export default function NewGGUser({ results, token, myStepper, setDoneCreate, se
                                 Cancel
                             </Button>
                             {
-                                open2 ? <CircularProgress color="secondary" /> : 
-                                <Button type='submit' color="primary">
-                                    Create
+                                open2 ? <CircularProgress color="secondary" /> :
+                                    <Button type='submit' color="primary">
+                                        Create
                                 </Button>
                             }
                         </DialogActions>
