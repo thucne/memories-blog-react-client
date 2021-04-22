@@ -16,7 +16,10 @@ import dotenv from 'dotenv';
 
 import ModalNotification from '../ModalNotification/ModalNotification';
 
+// import { getInfo } from '../../actions/user';
 // import { ReCaptcha } from 'react-recaptcha-v3';
+import StepperCustom from './Stepper';
+import { checkEmail } from '../../actions/invite';
 
 dotenv.config();
 
@@ -36,6 +39,10 @@ const Auth = (props) => {
     const [progress, setProgress] = useState(false);
     const [errors, setErrors] = useState(undefined);
     const [success, setSuccess] = useState(undefined);
+    const [showStepper, setShowStepper] = useState(false);
+    const [doneCreate, setDoneCreate] = useState(false);
+    const [result, setResult] = useState('');
+    const [token, setToken] = useState('');
 
     const { setLinear } = props;
 
@@ -140,19 +147,40 @@ const Auth = (props) => {
         setShowPassword(false);
     }
 
-    const googleSuccess = async (res) => {
-        const result = res?.profileObj;
-        const token = res?.tokenId;
+    const googleSuccess = (res) => {
+        const tempResult = res?.profileObj;
+        const tempToken = res?.tokenId;
+
         try {
-            dispatch({ type: 'AUTH', data: { result, token } });
-            setSuccess({ message: 'Log in succesfully!' });
-            setTimeout(() => {
-                setProgress(false);
-                if (setLinear) {
-                    setLinear(false);
+            dispatch(checkEmail(tempResult.email)).then((result) => {
+
+                if (!result.message) {
+                    dispatch({ type: 'AUTH', data: { result: tempResult, token: tempToken } });
+                    setSuccess({ message: 'Log in succesfully!' });
+                    setTimeout(() => {
+                        setProgress(false);
+                        if (setLinear) {
+                            setLinear(false);
+                        }
+                        history.push('/');
+                    }, 1000);
+                } else {
+                    dispatch({ type: 'AUTH', data: { result: tempResult } });
+                    if (!doneCreate) {
+                        setShowStepper(true);
+                    }
+                    setToken(tempToken);
+                    setResult(tempResult);
                 }
-                history.push('/');
-            }, 1000);
+            }).catch((err) => {
+                dispatch({ type: 'AUTH', data: { result: tempResult } });
+                if (!doneCreate) {
+                    setShowStepper(true);
+                }
+                setToken(tempToken);
+                setResult(tempResult);
+            });
+
         } catch (error) {
             console.log(error);
         }
@@ -208,6 +236,9 @@ const Auth = (props) => {
             }
             {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
+            }
+            {
+                showStepper && <StepperCustom activeStep={1} setDoneCreate={setDoneCreate} result={result} token={token} />
             }
 
             <Paper className={classes.paper} elevation={3}>

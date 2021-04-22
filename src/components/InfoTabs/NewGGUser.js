@@ -13,9 +13,9 @@ import { signup } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-export default function NewGGUser({ setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
+export default function NewGGUser({ result, token, myStepper, setDoneCreate, setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
 
-    const inititalState = { firstName: (ggFirstName || ''), lastName: (ggLastName || ''), email: (ggEmail || ''), ggId: (ggId || ''), avt: (ggAvt || '') };
+    const inititalState = { firstName: (ggFirstName || ''), lastName: (ggLastName || ''), email: (ggEmail || ''), ggId: (ggId || ''), avt: (ggAvt || ''), invitationCode: '' };
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -23,11 +23,11 @@ export default function NewGGUser({ setOpenErr, setErrMsg, setLinear, setOpen, f
     const [formData, setFormData] = useState(inititalState);
 
     const handleClose = () => {
-        setFormShow(false);
+        if (setFormShow) setFormShow(false);
     };
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (setFormData) setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
     const handleSubmit = (e) => {
@@ -38,6 +38,8 @@ export default function NewGGUser({ setOpenErr, setErrMsg, setLinear, setOpen, f
         dispatch(signup(formData, history)).then((result) => {
 
             if (result.message) {
+                localStorage.removeItem('profile');
+
                 setTimeout(() => {
                     if (setLinear) {
                         setLinear(false);
@@ -46,8 +48,16 @@ export default function NewGGUser({ setOpenErr, setErrMsg, setLinear, setOpen, f
                     }
                 }, 1000);
 
+                window.location.reload();
+
             } else {
+                if (result && token) {
+                    dispatch({ type: 'AUTH', data: { result, token } });
+                }
                 setTimeout(() => {
+                    if (setDoneCreate) {
+                        setDoneCreate(true);
+                    }
                     if (setLinear) {
                         setLinear(false);
                         setOpen(true);
@@ -63,9 +73,10 @@ export default function NewGGUser({ setOpenErr, setErrMsg, setLinear, setOpen, f
 
     return (
         <div>
-            <Dialog open={formShow} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={formShow ? formShow : true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Create account</DialogTitle>
                 <DialogContent>
+                    {myStepper}
                     <DialogContentText>
                         To create an account that linked with your current Google account, you need to fill these fields below if any.
                     </DialogContentText>
@@ -86,6 +97,7 @@ export default function NewGGUser({ setOpenErr, setErrMsg, setLinear, setOpen, f
                         }
                         <InputEdit name="password" label="Password" handleChange={handleChange} xs={6} type="password" />
                         <InputEdit name="confirmPassword" label="Repeat Password" handleChange={handleChange} xs={6} type="password" />
+                        <InputEdit name="invitationCode" label="Invitation Code" handleChange={handleChange} xs={6} type="text" />
                         <DialogActions>
                             <Button onClick={handleClose} color="primary">
                                 Cancel
