@@ -39,3 +39,5 @@ export const toggleSubcribe = () => API.post('/user/toggleSubcribe');
 export const createNoti = (formData) => API.post('/noti/createNoti', formData);
 export const deleteNoti = (id) => API.delete(`/noti/deleteNoti/${id}`);
 export const getNoti = () => API.get('/noti');
+
+export const getInvitationCode = () => API.post('/invite');

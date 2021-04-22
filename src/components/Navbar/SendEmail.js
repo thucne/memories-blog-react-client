@@ -14,44 +14,47 @@ import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { green } from '@material-ui/core/colors';
 
+import { getInvitationCode } from '../../actions/invite';
+import { useDispatch } from 'react-redux';
+
 dotenv.config();
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    wrapper: {
-        margin: theme.spacing(1),
-        position: 'relative',
-    },
-    buttonSuccess: {
-        backgroundColor: green[500],
-        '&:hover': {
-            backgroundColor: green[700],
-        },
-    },
-    fabProgress: {
-        color: green[500],
-        position: 'absolute',
-        top: -6,
-        left: -6,
-        zIndex: 1,
-    },
-    buttonProgress: {
-        color: green[500],
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    },
+	root: {
+		display: 'flex',
+		alignItems: 'center',
+	},
+	wrapper: {
+		margin: theme.spacing(1),
+		position: 'relative',
+	},
+	buttonSuccess: {
+		backgroundColor: green[500],
+		'&:hover': {
+			backgroundColor: green[700],
+		},
+	},
+	fabProgress: {
+		color: green[500],
+		position: 'absolute',
+		top: -6,
+		left: -6,
+		zIndex: 1,
+	},
+	buttonProgress: {
+		color: green[500],
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12,
+	},
 }));
 
-const invitationTemplate = (time) => {
-    const temp = time.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-    time = temp;
-    return `
+const invitationTemplate = (time, code) => {
+	const temp = time.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+	time = temp;
+	return `
     <!DOCTYPE html
 	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -333,7 +336,7 @@ const invitationTemplate = (time) => {
 													target="_blank"><span
 														style="padding-left:35px;padding-right:35px;font-size:16px;display:inline-block;letter-spacing:undefined;"><span
 															style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;">JOIN
-															NOW</span></span></span></a>
+															NOW (invitation code: ${code})</span></span></span></a>
 												<!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
 											</div>
 											<div align="center" class="img-container center autowidth"
@@ -459,7 +462,7 @@ const invitationTemplate = (time) => {
 													href="https://www.facebook.com/Bobie.1708" style="outline:none"
 													tabindex="-1" target="_blank"><img align="center" alt="Image"
 														border="0" class="center autowidth"
-														src="https://res.cloudinary.com/katyperrycbt/image/upload/v1618894836/stpmbriekobzhchs0wcj.jpg"
+														src="https://res.cloudinary.com/katyperrycbt/image/upload/v1619072764/tramu_c9nfsx.jpg"
 														style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 120px; display: block;"
 														title="Image" width="120" /></a>
 												<!--[if mso]></td></tr></table><![endif]-->
@@ -620,7 +623,7 @@ const invitationTemplate = (time) => {
 													style="font-size: 14px; line-height: 1.2; color: #464c4a; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 17px;">
 													<p
 														style="margin: 0; font-size: 14px; line-height: 1.2; word-break: break-word; text-align: center; mso-line-height-alt: 17px; margin-top: 0; margin-bottom: 0;">
-														Specialized Resident Doctor</p>
+														Orthodontist</p>
 												</div>
 											</div>
 											<!--[if mso]></td></tr></table><![endif]-->
@@ -917,105 +920,114 @@ const invitationTemplate = (time) => {
 }
 
 const SendEmail = ({ open, setOpen, setLinear }) => {
-    const classes = useStyles();
-    const [success, setSuccess] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
+	const classes = useStyles();
+	const [success, setSuccess] = React.useState(false);
+	const [loading, setLoading] = React.useState(false);
 
-    const user = JSON.parse(localStorage.getItem('profile'));
-    const html = invitationTemplate(new Date());
-    const [emailData, setEmailData] = useState({
-        from: 'MEmories <no-reply@oopsmemories.site>',
-        to: '',
-        subject: `You got an invitation`,
-        html: html
-    });
+	const user = JSON.parse(localStorage.getItem('profile'));
+	const html = invitationTemplate(new Date(), '');
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+	const dispatch = useDispatch();
 
-    // const footer = `
-    // <br/><br/>
-    // Best regards,
-    // <strong>MEmories Team</strong>
-    // <br/><br/><br/>
-    // <img src='https://res.cloudinary.com/katyperrycbt/image/upload/v1615297494/Web_capture_5-3-2021_145319_memories-thuckaty.netlify.app_hrcwg6.jpg' alt='MEmories' />
-    // <p style="font-size: 0.875em; align-items: center; justify-content: center; display: flex; color: gray;">MEmories Team, Quarter-6, Linh Trung Ward, Thu Duc District, Thu Duc City, Vietnam 70000.</p>
-    // <br/>
-    // <p style="font-size: 0.875em; align-items: center; justify-content: center; display: flex; color: gray;">Contact: katyperrycbt@gmail.com</p>
-    // `
+	const [emailData, setEmailData] = useState({
+		from: 'MEmories <no-reply@oopsmemories.site>',
+		to: '',
+		subject: `You got an invitation`,
+		html: html
+	});
 
-    const handleChange = (e) => {
-        setEmailData({ ...emailData, [e.target.name]: e.target.value });
-    }
+	const handleClose = () => {
+		setOpen(false);
+	};
 
-    const sendMail = () => {
-        setLinear(true);
-        const mg = mailgun({ apiKey: process.env.REACT_APP_MAILGUN, domain: process.env.REACT_APP_MAILGUN_URL });
-        const data = emailData;
-        mg.messages().send({...data, html: data.html}, function (error, body) {
-            console.log(body);
-            setSuccess(true);
-            setLoading(false);
-            setLinear(false);
-        });
-    }
+	// const footer = `
+	// <br/><br/>
+	// Best regards,
+	// <strong>MEmories Team</strong>
+	// <br/><br/><br/>
+	// <img src='https://res.cloudinary.com/katyperrycbt/image/upload/v1615297494/Web_capture_5-3-2021_145319_memories-thuckaty.netlify.app_hrcwg6.jpg' alt='MEmories' />
+	// <p style="font-size: 0.875em; align-items: center; justify-content: center; display: flex; color: gray;">MEmories Team, Quarter-6, Linh Trung Ward, Thu Duc District, Thu Duc City, Vietnam 70000.</p>
+	// <br/>
+	// <p style="font-size: 0.875em; align-items: center; justify-content: center; display: flex; color: gray;">Contact: katyperrycbt@gmail.com</p>
+	// `
 
-    const buttonClassname = clsx({
-        [classes.buttonSuccess]: success,
-    });
+	const handleChange = (e) => {
+		setEmailData({ ...emailData, [e.target.name]: e.target.value });
+	}
+
+	const sendMail = () => {
+		setLinear(true);
+		const mg = mailgun({ apiKey: process.env.REACT_APP_MAILGUN, domain: process.env.REACT_APP_MAILGUN_URL });
+		const data = emailData;
+		dispatch(getInvitationCode()).then((result) => {
+			mg.messages().send({ ...data, html: invitationTemplate(new Date(), result.invitationCode) }, function (error, body) {
+				setSuccess(true);
+				setLoading(false);
+				setLinear(false);
+			});
+		}).catch((err) => {
+			console.log('result', err);
+			setSuccess(true);
+			setLoading(false);
+			setLinear(false);
+		});
+	}
+
+	const buttonClassname = clsx({
+		[classes.buttonSuccess]: success,
+	});
 
 
-    const handleButtonClick = () => {
-        if (!loading) {
-            setSuccess(false);
-            setLoading(true);
-            sendMail();
-        }
-    };
+	const handleButtonClick = () => {
+		if (!loading) {
+			setSuccess(false);
+			setLoading(true);
+			sendMail();
+		}
+	};
 
 
-    return (
-        <div>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Send mail</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        To invite a friend, please type his/her email here!
+	return (
+		<div>
+			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+				<DialogTitle id="form-dialog-title">Send mail</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						To invite a friend, please type his/her email here!
                     </DialogContentText>
-                    <InputEdit required name="to" type="text" label="To (comma separated)" handleChange={handleChange} />
-                    {
-                        process.env.REACT_APP_THUC_KATY === user?.result?.email &&
-                        (
-                            <>
-                                <InputEdit required name="subject" type="text" label="Subject" handleChange={handleChange} />
-                                <InputEdit required name="html" type="text" label="Content" multiline rows={10} handleChange={handleChange} />
-                            </>
-                        )
-                    }
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
+					<InputEdit required name="to" type="text" label="To (comma separated)" handleChange={handleChange} />
+					{
+						process.env.REACT_APP_THUC_KATY === user?.result?.email &&
+						(
+							<>
+								<InputEdit required name="subject" type="text" label="Subject" handleChange={handleChange} />
+								<InputEdit required name="html" type="text" label="Content" multiline rows={10} handleChange={handleChange} />
+							</>
+						)
+					}
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose} color="primary">
+						Cancel
                     </Button>
-                    <div className={classes.root}>
-                        <div className={classes.wrapper}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={buttonClassname}
-                                disabled={loading}
-                                onClick={handleButtonClick}
-                            >
-                                Send
+					<div className={classes.root}>
+						<div className={classes.wrapper}>
+							<Button
+								variant="contained"
+								color="primary"
+								className={buttonClassname}
+								disabled={loading}
+								onClick={handleButtonClick}
+							>
+								Send
                             </Button>
-                            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-                        </div>
-                    </div>
-                </DialogActions>
-            </Dialog>
-        </div>
-    )
+							{loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+						</div>
+					</div>
+				</DialogActions>
+			</Dialog>
+		</div>
+	)
 }
 
 export default SendEmail;

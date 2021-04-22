@@ -20,7 +20,7 @@ import ModalNotification from '../ModalNotification/ModalNotification';
 
 dotenv.config();
 
-const inititalState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
+const inititalState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '', invitationCode: '' };
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -36,7 +36,6 @@ const Auth = (props) => {
     const [progress, setProgress] = useState(false);
     const [errors, setErrors] = useState(undefined);
     const [success, setSuccess] = useState(undefined);
-    const [invitedCode, setInvitedCode] = useState('');
 
     const { setLinear } = props;
 
@@ -51,46 +50,37 @@ const Auth = (props) => {
 
     const submitData = () => {
         if (isSignup) {
-            if (invitedCode === 'c191d2e6-0334-404e-ab5a-8166c8dda594') {
-                dispatch(signup(formData, history)).then((result) => {
+            dispatch(signup(formData, history)).then((result) => {
 
-                    if (result.message) {
-                        setProgress(false);
-                        setTimeout(() => {
-                            if (setLinear) {
-                                setLinear(false);
-                            }
-                        }, 1000);
-                        setErrors(result);
-                    } else {
-                        setSuccess({ message: 'Create succesfully!' });
-                        setTimeout(() => {
-                            setProgress(false);
-                            if (setLinear) {
-                                setLinear(false);
-                            }
-                            history.push('/');
-                        }, 1000);
-                    }
-                }).catch((error) => {
-                    console.log(error);
+                if (result.message) {
                     setProgress(false);
                     setTimeout(() => {
                         if (setLinear) {
                             setLinear(false);
                         }
                     }, 1000);
-                    setErrors(error);
-                });
-            } else {
+                    setErrors(result);
+                } else {
+                    setSuccess({ message: 'Create succesfully!' });
+                    setTimeout(() => {
+                        setProgress(false);
+                        if (setLinear) {
+                            setLinear(false);
+                        }
+                        history.push('/');
+                    }, 1000);
+                }
+            }).catch((error) => {
+                console.log(error);
                 setProgress(false);
                 setTimeout(() => {
                     if (setLinear) {
                         setLinear(false);
                     }
                 }, 1000);
-                setErrors({message: 'Incorrect invitation code'});
-            }
+                setErrors(error);
+            });
+
 
         } else {
             dispatch(signin(formData, history)).then((result) => {
@@ -259,7 +249,7 @@ const Auth = (props) => {
                                                         fullWidth
                                                     />
                                                 </Grid>
-                                                <Input name="invitedCode" label="Invitation Code" handleChange={(e) => setInvitedCode(e.target.value)} type="text" />
+                                                <Input name="invitationCode" label="Invitation Code" handleChange={handleChange} type="text" />
                                             </>
                                         )
                                     }
