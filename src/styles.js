@@ -14,6 +14,12 @@ export default makeStyles((theme) => ({
   },
   image: {
     marginLeft: '15px',
+  }, 
+  root: {
+    display: 'flex',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
   },
   linearProgress: {
     width: '100%',

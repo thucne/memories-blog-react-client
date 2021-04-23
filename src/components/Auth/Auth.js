@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container, CircularProgress, Tooltip, TextField } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
@@ -46,6 +46,12 @@ const Auth = (props) => {
 
     const { setLinear } = props;
 
+    useEffect(() => {
+        window.onbeforeunload = () => {
+            alert('sdsds');
+            return true;
+        }
+    })
     // const recaptcha = useRef(null);
 
     const noti = useSelector((state) => {
@@ -156,7 +162,6 @@ const Auth = (props) => {
 
                 if (!result.message) {
                     dispatch({ type: 'AUTH', data: { result: tempResult, token: tempToken } });
-                    setSuccess({ message: 'Log in succesfully!' });
                     setTimeout(() => {
                         setProgress(false);
                         if (setLinear) {
@@ -165,6 +170,7 @@ const Auth = (props) => {
                         history.push('/');
                     }, 1000);
                 } else {
+                    tempResult.incomplete = false;
                     dispatch({ type: 'AUTH', data: { result: tempResult } });
                     if (!doneCreate) {
                         setShowStepper(true);
@@ -173,6 +179,7 @@ const Auth = (props) => {
                     setResult(tempResult);
                 }
             }).catch((err) => {
+                tempResult.incomplete = false;
                 dispatch({ type: 'AUTH', data: { result: tempResult } });
                 if (!doneCreate) {
                     setShowStepper(true);
@@ -238,9 +245,8 @@ const Auth = (props) => {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
             }
             {
-                showStepper && <StepperCustom setLinear={setLinear} activeStep={1} setDoneCreate={setDoneCreate} result={result} token={token} />
+                showStepper && <StepperCustom setSuccess={setSuccess} setErrors={setErrors}  setLinear={setLinear} activeStep={1} setDoneCreate={setDoneCreate} result={result} token={token} />
             }
-
             <Paper className={classes.paper} elevation={3}>
                 {
                     progress ? <CircularProgress /> : (

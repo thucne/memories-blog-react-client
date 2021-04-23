@@ -13,7 +13,7 @@ const Posts = ({ setCurrentId, setLinear, searchKey }) => {
     let posts = useSelector((state) => state.posts);
 
     const user = JSON.parse(localStorage.getItem('profile'));
-
+    
     return (
         user ? (
             !posts.length ?
@@ -72,7 +72,7 @@ const Posts = ({ setCurrentId, setLinear, searchKey }) => {
                                 name: 'MEmories',
                                 creator: '123456',
                                 createdAt: '0000-03-07T09:45:48.790+00:00',
-                                creatorAvt: '',
+                                creatorAvt: 'https://res.cloudinary.com/katyperrycbt/image/upload/v1618987296/photo_fyxf36.png',
                                 selectedFile: 'http://res.cloudinary.com/katyperrycbt/image/upload/v1616516477/w8gneu3s3mvqpollh8w0.jpg',
                                 oops: false,
                                 modified: false,

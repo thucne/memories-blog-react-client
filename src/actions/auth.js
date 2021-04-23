@@ -34,10 +34,11 @@ export const signin = (formData, history) => async (dispatch) => {
 export const signup = (formData, history) => async (dispatch) => {
     try {
         const { data } = await api.signUp(formData);
-
+        
         dispatch({ type: AUTH, data });
+        
+        return data;
       
-        history.push('/');
     } catch (error) {
         dispatch({ type: AUTH, error: {message: error.response.data.message} });
         

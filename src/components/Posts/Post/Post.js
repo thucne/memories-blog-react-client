@@ -6,7 +6,7 @@ import Comment from './Comment';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+// import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import moment from 'moment';
 import useStyles from './styles';
@@ -24,13 +24,13 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import ShowAllAvts from './ShowAllAvts';
 import ShareIcon from '@material-ui/icons/Share';
 import CommentIcon from '@material-ui/icons/Comment';
-import LoyaltyIcon from '@material-ui/icons/Loyalty';
+// import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import ShareOrDownload from './ShareOrDownload';
 import FullImage from './FullImage';
-import {LinearProgress} from '@material-ui/core';
-
+import { LinearProgress } from '@material-ui/core';
+import TuneIcon from '@material-ui/icons/Tune';
 import { postComment, editComment } from '../../../actions/posts';
-
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 const Post = ({ post, setCurrentId, setLinear }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -51,8 +51,6 @@ const Post = ({ post, setCurrentId, setLinear }) => {
     const scrollComment = useRef(null);
 
     const [isPostingComment, setIsPostingComment] = useState(false);
-
-
 
     const cmts = useSelector(state => {
         return Array.isArray(state.cmts) ? state.cmts.filter((cmt) => cmt.postId === post._id) : []
@@ -153,6 +151,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
     //     setAnchorEl(event.currentTarget);
     // }
 
+
     useEffect(() => {
         if (isDel) {
             dispatch(deletePost(post._id)).then(() => setIsDel(false)).catch(() => setIsDel(false));
@@ -226,32 +225,36 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                     <div className={classes.avtCover} style={{ display: 'flex', justifyContent: 'flex-start' }}>
                         {(process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1) ? (
                             <>
-                                <Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator) ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
-                                    <AssignmentIcon style={{ color: 'green' }} />
+                                <Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
+                                    {/* <AssignmentIcon style={{ color: 'green' }} /> */}
                                 </Avatar>
                                 <Typography className={classes.username} variant="h6">
                                     {avts.filter((avt) => avt.id === post.creator)[0] ? avts.filter((avt) => avt.id === post.creator)[0]?.name : post.name}
                                 </Typography>
                             </>) : (<>
-                                <Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator) ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
-                                    <AssignmentIcon style={{ color: 'green' }} />
+                                <Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
+                                    {/* <AssignmentIcon style={{ color: 'green' }} /> */}
                                 </Avatar>
                                 <Typography className={classes.username} variant="h6">
                                     {post.name}
                                 </Typography></>)}
                         &nbsp;
-                        {post.oops && (
-                            <Tooltip title="Verified User">
+                        {post.oops ?
+                            <Tooltip title="Oops User">
                                 <VerifiedUserIcon style={{ color: '#20FF00' }} />
-                            </Tooltip>)}
+                            </Tooltip>
+                            : <Tooltip title="Verified User">
+                                <CheckCircleIcon style={{ color: '#487FF9' }} />
+                            </Tooltip>
+                        }
                         <br />
                     </div>
-                    <Typography variant="body2" style={{ display: 'flex' }}>
+                    <Typography variant="body2">
                         {`${moment(post.createdAt).format('ddd, MMMM DD YYYY, hh:mm a')} [${moment(post.createdAt).fromNow()}]`}
                         {post.modified ? (post.modified === true ?
                             (
                                 <Tooltip title="This MEmory has been modified by the author!">
-                                    <LoyaltyIcon style={{ color: 'yellow' }} />
+                                    <TuneIcon style={{ color: 'yellow' }} />
                                 </Tooltip>
                             ) : ''
                         ) : ''}
@@ -268,7 +271,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                     )
                 }
                 {
-                    (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.googleId) > -1) &&
+                    (true || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.googleId) > -1) &&
                     <>
                         <div className={classes.overlay3}>
                             <Button style={{ color: 'pink' }} size="small" onClick={shareCard}>
@@ -296,7 +299,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                         <Likes />
                     </Button>
                     {
-                        (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.googleId) > -1) && (
+                        (true || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.googleId) > -1) && (
                             <Button onClick={handleShowAll} size="small" color="primary" disabled={!user?.result}>
                                 <AvtLike />
                             </Button>

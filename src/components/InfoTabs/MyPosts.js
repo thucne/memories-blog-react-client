@@ -51,7 +51,7 @@ const MyPost = ({ setLinear, currentId, setCurrentId }) => {
     if (!user) return <Auth />
 
     return (
-        !posts.length ?
+        !posts ?
             <Card className={classes.card} style={{ borderRadius: '20px' }}>
                 <CardHeader
                     avatar={<Skeleton animation="wave" variant="circle" width={40} height={40} />}
@@ -83,6 +83,26 @@ const MyPost = ({ setLinear, currentId, setCurrentId }) => {
                                         <Post post={post} setCurrentId={setCurrentId} />
                                     </Grid>
                                 ))}
+                                {
+                                    posts.length === 0 && <Grid key={'123456a'} item xs={6} sm={4} md={4}>
+                                    <Post post={
+                                        {
+                                            tags: ['MEmories'],
+                                            likes: [],
+                                            title: 'No Data!',
+                                            message: 'Oops! You have no post. Try to create the first one',
+                                            name: 'MEmories',
+                                            creator: '123456',
+                                            createdAt: '0000-03-07T09:45:48.790+00:00',
+                                            creatorAvt: 'http://res.cloudinary.com/katyperrycbt/image/upload/v1618987296/photo_fyxf36.png',
+                                            selectedFile: 'http://res.cloudinary.com/katyperrycbt/image/upload/v1619163349/logo_knvpam.png',
+                                            oops: false,
+                                            modified: false,
+                                            __v: 0,
+                                            _id: '123456789'
+                                        }} setCurrentId={'setCurrentId'} setLinear={setLinear} />
+                                </Grid>
+                                }
                             </Grid>
                         </Grid>
                     </Grid>

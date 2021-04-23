@@ -14,9 +14,13 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
-export default function NewGGUser({ results, token, myStepper, setDoneCreate, setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
+export default function NewGGUser({ setSuccess, setErrors, disableCancelButton, results, token, myStepper, setDoneCreate, setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
 
     const inititalState = { firstName: (ggFirstName || ''), lastName: (ggLastName || ''), email: (ggEmail || ''), ggId: (ggId || ''), avt: (ggAvt || ''), invitationCode: '' };
     const dispatch = useDispatch();
@@ -37,45 +41,53 @@ export default function NewGGUser({ results, token, myStepper, setDoneCreate, se
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (results) {
+            localStorage.setItem('profile', JSON.stringify({ result: results, token }));
+        }
         setOpen2(true);
         if (setLinear) {
             setLinear(true);
         }
         dispatch(signup(formData, history)).then((result) => {
-
-            if (result.message) {
-                localStorage.removeItem('profile');
-
+            console.log('result is ', result);
+            // if (results && token) {localStorage.setItem('profile', JSON.stringify({result, token}))}
+            if (result?.message) {
+                setErrors(result);
+                // if(results) {
+                //     localStorage.setItem('profile', JSON.stringify({result: results}));
+                // }
                 setTimeout(() => {
                     if (setLinear) {
                         setLinear(false);
-                        setErrMsg(result.message);
-                        setOpenErr(true);
+                        if (setErrMsg) setErrMsg(result.message);
+                        if (setOpenErr) setOpenErr(true);
                         setOpen2(false);
                     }
                 }, 1000);
-
-                window.location.reload();
+                // if (results && token) {localStorage.setItem('profile', JSON.stringify({result}))}
+                // window.location.reload();
 
             } else {
                 if (results && token) {
                     dispatch({ type: 'AUTH', data: { result: results, token } });
                 }
+                setSuccess({ message: 'Created linked account! Welcome to MEmories!' });
+
                 setTimeout(() => {
                     if (setDoneCreate) {
                         setDoneCreate(true);
                     }
                     if (setLinear) {
                         setLinear(false);
-                        setOpen(true);
+                        if (setOpen) setOpen(true);
                         setOpen2(false);
-
                     }
                     history.push('/');
                 }, 1000);
             }
         }).catch((error) => {
-            console.log(error);
+            setErrors(error);
+            console.log('Error is', error);
             if (setLinear) setLinear(false);
             setOpen2(false);
             setSnackMessage(error.message);
@@ -96,7 +108,9 @@ export default function NewGGUser({ results, token, myStepper, setDoneCreate, se
         <div>
             {
                 <Snackbar open={openSnack} autoHideDuration={2000} onClose={handleCloseSnack}>
-                    {snackMessage}
+                    <Alert onClose={handleCloseSnack} severity="success">
+                        {snackMessage}                    
+                    </Alert>
                 </Snackbar>
             }
             <Dialog open={formShow ? formShow : true} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -125,7 +139,7 @@ export default function NewGGUser({ results, token, myStepper, setDoneCreate, se
                         <InputEdit name="confirmPassword" label="Repeat Password" handleChange={handleChange} xs={6} type="password" />
                         <InputEdit name="invitationCode" label="Invitation Code" handleChange={handleChange} xs={6} type="text" />
                         <DialogActions>
-                            <Button onClick={handleClose} color="primary">
+                            <Button onClick={handleClose} style={{ display: disableCancelButton ? 'none' : '' }} color="primary">
                                 Cancel
                             </Button>
                             {
