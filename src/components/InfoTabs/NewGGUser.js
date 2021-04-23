@@ -18,7 +18,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
+}
 
 export default function NewGGUser({ setSuccess, setErrors, disableCancelButton, results, token, myStepper, setDoneCreate, setOpenErr, setErrMsg, setLinear, setOpen, formShow, setFormShow, ggId, ggEmail, ggFirstName, ggLastName, ggAvt }) {
 
@@ -39,17 +39,8 @@ export default function NewGGUser({ setSuccess, setErrors, disableCancelButton, 
         if (setFormData) setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (results) {
-            localStorage.setItem('profile', JSON.stringify({ result: results, token }));
-        }
-        setOpen2(true);
-        if (setLinear) {
-            setLinear(true);
-        }
+    const submitData = () => {
         dispatch(signup(formData, history)).then((result) => {
-            console.log('result is ', result);
             // if (results && token) {localStorage.setItem('profile', JSON.stringify({result, token}))}
             if (result?.message) {
                 setErrors(result);
@@ -95,6 +86,23 @@ export default function NewGGUser({ setSuccess, setErrors, disableCancelButton, 
         });
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (results) {
+            localStorage.setItem('profile', JSON.stringify({ result: results, token }));
+        }
+        setOpen2(true);
+        if (setLinear) {
+            setLinear(true);
+        }
+
+        window.grecaptcha.ready(() => {
+            window.grecaptcha.execute(process.env.REACT_APP_RECAPTCHA, { action: 'submit' }).then(token => {
+                submitData();
+            });
+        });
+    }
+
     const handleCloseSnack = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -109,7 +117,7 @@ export default function NewGGUser({ setSuccess, setErrors, disableCancelButton, 
             {
                 <Snackbar open={openSnack} autoHideDuration={2000} onClose={handleCloseSnack}>
                     <Alert onClose={handleCloseSnack} severity="success">
-                        {snackMessage}                    
+                        {snackMessage}
                     </Alert>
                 </Snackbar>
             }

@@ -29,7 +29,7 @@ const ChangePassword = ({ setLinear }) => {
 
     const user = JSON.parse(localStorage.getItem('profile'));
 
-    const inititalState = {oldPassword: '', newPassword: ''};
+    const inititalState = { oldPassword: '', newPassword: '' };
 
     const [loading, setLoading] = useState(false);
 
@@ -56,7 +56,7 @@ const ChangePassword = ({ setLinear }) => {
         }
         const indexOfInfo = temp.indexOf('info');
 
-        if (indexOfInfo >-1) {
+        if (indexOfInfo > -1) {
             temp.splice(indexOfInfo, 1);
         }
         console.log('keys ', temp);
@@ -69,26 +69,35 @@ const ChangePassword = ({ setLinear }) => {
         setFormShow(true);
     }
 
-    const handleSave = (e) => {
-        e.preventDefault();
-        console.log(formData);
-        setLinear(true);
-        setLoading(true);
+    const submitData = () => {
         dispatch(updateInfo(formData)).then((result) => {
             setLinear(false); setLoading(false);
             if (result.message) {
                 setErrMsg(result.message);
                 setOpenErr(true);
             } else {
-            setOpen(true);
+                setOpen(true);
             }
-        })
-        .catch((error) => {
-            setLinear(false);
-            setLoading(false);
-            console.log(error.message);
-            setErrMsg(error.message);
-            setOpenErr(true);
+            })
+            .catch((error) => {
+                setLinear(false);
+                setLoading(false);
+                console.log(error.message);
+                setErrMsg(error.message);
+                setOpenErr(true);
+            });
+    }
+
+    const handleSave = (e) => {
+        e.preventDefault();
+        console.log(formData);
+        setLinear(true);
+        setLoading(true);
+
+        window.grecaptcha.ready(() => {
+            window.grecaptcha.execute(process.env.REACT_APP_RECAPTCHA, { action: 'submit' }).then(token => {
+                submitData();
+            });
         });
     }
 

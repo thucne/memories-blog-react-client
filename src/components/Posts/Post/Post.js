@@ -244,7 +244,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                                 <VerifiedUserIcon style={{ color: '#20FF00' }} />
                             </Tooltip>
                             : <Tooltip title="Verified User">
-                                <CheckCircleIcon style={{ color: '#487FF9' }} />
+                                <CheckCircleIcon style={{ color: '#16F8E2' }} />
                             </Tooltip>
                         }
                         <br />

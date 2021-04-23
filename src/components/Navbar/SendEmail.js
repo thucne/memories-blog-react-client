@@ -955,10 +955,7 @@ const SendEmail = ({ open, setOpen, setLinear }) => {
 		setEmailData({ ...emailData, [e.target.name]: e.target.value });
 	}
 
-	const sendMail = () => {
-		setLinear(true);
-		const mg = mailgun({ apiKey: process.env.REACT_APP_MAILGUN, domain: process.env.REACT_APP_MAILGUN_URL });
-		const data = emailData;
+	const submitData = (mg, data) => {
 		dispatch(getInvitationCode()).then((result) => {
 			mg.messages().send({ ...data, html: invitationTemplate(new Date(), result.invitationCode) }, function (error, body) {
 				setSuccess(true);
@@ -971,6 +968,19 @@ const SendEmail = ({ open, setOpen, setLinear }) => {
 			setLoading(false);
 			setLinear(false);
 		});
+	}
+
+	const sendMail = () => {
+		setLinear(true);
+		const mg = mailgun({ apiKey: process.env.REACT_APP_MAILGUN, domain: process.env.REACT_APP_MAILGUN_URL });
+		const data = emailData;
+
+		window.grecaptcha.ready(() => {
+			window.grecaptcha.execute(process.env.REACT_APP_RECAPTCHA, { action: 'submit' }).then(token => {
+				submitData(mg, data);
+			});
+		});
+
 	}
 
 	const buttonClassname = clsx({
