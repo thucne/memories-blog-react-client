@@ -106,7 +106,7 @@ const Auth = (props) => {
                     setProgress(false);
                     setErrors(result);
                 } else {
-                    setSuccess({ message: 'Log in succesfully!' });
+                    setSuccess({ message: 'Log in successfully!' });
                     setTimeout(() => {
                         setProgress(false);
                         if (setLinear) {

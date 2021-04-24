@@ -21,6 +21,8 @@ import Reload from './Reload';
 import Search from './Search';
 import Noti from './Noti';
 
+import FullImage from '../Posts/Post/FullImage';
+
 dotenv.config();
 
 const Navbar = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
@@ -31,7 +33,7 @@ const Navbar = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
     const location = useLocation();
     const [isChat, setIsChat] = useState(false);
     const [open, setOpen] = useState(false);
-
+    const [openFull, setOpenFull] = useState(false);
     const [openNoti, setOpenNoti] = useState(false);
 
     const stateUser = useSelector((state) => state.user.info);
@@ -76,11 +78,16 @@ const Navbar = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
                 />
             }
             {
+                openFull && <FullImage open={openFull} setOpen={setOpenFull} img={memories} />
+            }
+            {
                 process.env.REACT_APP_THUC_KATY === user?.result?.email && <Noti openNoti={openNoti} setOpenNoti={setOpenNoti} setLinear={setLinear} />
             }
             <div className={classes.brandContainer}>
                 <Typography component={Link} to="/" className={classes.heading} variant="h2" align="center">MEmories</Typography>
-                <img className={classes.image} src={memories} alt="memories" height="60" />
+                <div onClick={() => setOpenFull(true)}>
+                    <img className={classes.image} src={memories} alt="memories" height="60" />
+                </div>
                 <Reload />
                 <Search setSearchKey={setSearchKey} />
             </div>
@@ -114,7 +121,7 @@ const Navbar = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
                                         onClick={() => {
                                             process.env.REACT_APP_THUC_KATY === user?.result?.email && setOpenNoti(true);
                                         }}
-                                        style={{border: process.env.REACT_APP_THUC_KATY === user?.result?.email && '5px solid #FFD700', cursor: process.env.REACT_APP_THUC_KATY === user?.result?.email && 'pointer'}}
+                                        style={{ border: process.env.REACT_APP_THUC_KATY === user?.result?.email && '5px solid #FFD700', cursor: process.env.REACT_APP_THUC_KATY === user?.result?.email && 'pointer' }}
                                     >
                                         {user.result.name.charAt(0)}
                                     </Avatar>

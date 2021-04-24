@@ -16,4 +16,5 @@ export const CRE_NOTI = 'CRE_NOTI';
 export const DEL_NOTI = 'DEL_NOTI';
 export const GET_NOTI = 'GET_NOTI';
 export const SET = 'SET';
+export const WALL = 'WALL';
 

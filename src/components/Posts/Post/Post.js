@@ -31,6 +31,9 @@ import { LinearProgress } from '@material-ui/core';
 import TuneIcon from '@material-ui/icons/Tune';
 import { postComment, editComment } from '../../../actions/posts';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+import Wall from '../../Connection/Wall';
+
 const Post = ({ post, setCurrentId, setLinear }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -49,8 +52,11 @@ const Post = ({ post, setCurrentId, setLinear }) => {
     // const [anchorEl, setAnchorEl] = useState(null);
     const [edit, setEdit] = useState('');
     const scrollComment = useRef(null);
+    const [showUserAvt, setShowUserAvt] = useState(false);
 
     const [isPostingComment, setIsPostingComment] = useState(false);
+
+    const [openWall, setOpenWall] = useState(false);
 
     const cmts = useSelector(state => {
         return Array.isArray(state.cmts) ? state.cmts.filter((cmt) => cmt.postId === post._id) : []
@@ -217,6 +223,12 @@ const Post = ({ post, setCurrentId, setLinear }) => {
             {
                 isHover && <FullImage open={isHover} setOpen={setIsHover} img={httpToHTTPS(post.selectedFile, 4, 's')} />
             }
+            {
+                showUserAvt && <FullImage open={showUserAvt} setOpen={setShowUserAvt} img={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt} />
+            }
+            {
+                openWall && <Wall id={post.creator} open={openWall} setOpen={setOpenWall} />
+            }
             <Card ref={myToBeSharedCard} className={post.oops ? `${classes.card} ${classes.cardOops}` : `${classes.card} ${classes.cardNotOops}`}>
                 <div onClick={handleMouseHover}>
                     <CardMedia className={classes.media} image={httpToHTTPS(post.selectedFile, 4, 's')} title={post.title} />
@@ -225,19 +237,24 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                     <div className={classes.avtCover} style={{ display: 'flex', justifyContent: 'flex-start' }}>
                         {(process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1) ? (
                             <>
-                                <Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
+                                <div onClick={() => setShowUserAvt(true)}><Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
                                     {/* <AssignmentIcon style={{ color: 'green' }} /> */}
-                                </Avatar>
-                                <Typography className={classes.username} variant="h6">
-                                    {avts.filter((avt) => avt.id === post.creator)[0] ? avts.filter((avt) => avt.id === post.creator)[0]?.name : post.name}
-                                </Typography>
+                                </Avatar></div>
+                                <div onClick={() => setOpenWall(true)} style={{cursor: 'pointer'}}>
+                                    <Typography className={classes.username} variant="h6">
+                                        {avts.filter((avt) => avt.id === post.creator)[0] ? avts.filter((avt) => avt.id === post.creator)[0]?.name : post.name}
+                                    </Typography>
+                                </div>
                             </>) : (<>
-                                <Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
+                                <div onClick={() => setShowUserAvt(true)}><Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
                                     {/* <AssignmentIcon style={{ color: 'green' }} /> */}
-                                </Avatar>
-                                <Typography className={classes.username} variant="h6">
-                                    {post.name}
-                                </Typography></>)}
+                                </Avatar></div>
+                                <div onClick={() => setOpenWall(true)} style={{cursor: 'pointer'}}>
+                                    <Typography className={classes.username} variant="h6">
+                                        {post.name}
+                                    </Typography>
+                                </div>
+                            </>)}
                         &nbsp;
                         {post.oops ?
                             <Tooltip title="Oops User">
