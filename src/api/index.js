@@ -41,4 +41,6 @@ export const deleteNoti = (id) => API.delete(`/noti/deleteNoti/${id}`);
 export const getNoti = () => API.get('/noti');
 
 export const getInvitationCode = () => API.post('/invite');
-export const checkEmail = (email) => API.get(`/email/find/${email}`)
+export const checkEmail = (email) => API.get(`/email/find/${email}`);
+
+export const getWall = (id) => API.get(`/wall/${id}`);
