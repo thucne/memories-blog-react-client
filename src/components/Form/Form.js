@@ -8,6 +8,9 @@ import useStyles from './styles';
 import { createPost, updatePost } from '../../actions/posts';
 import FormSnackBar from './FormSnackBar';
 //Get the current ID
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 
 const pushNoti = (title, subtitle, message) => {
     addNotification({
@@ -18,11 +21,19 @@ const pushNoti = (title, subtitle, message) => {
         native: true // when using native, your OS will handle theming.
     });
 }
-
+/* <div className={classes.fileInput}>
+           <FileBase
+               type="file"
+               required
+               multiple={false}
+               inputProps={{ accept: 'image/*, .xlsx, .xls, .csv, .pdf, .pptx, .pptm, .ppt' }}
+               InputProps={{ style: { display: 'none' } }}
+               onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />
+       </div> */
 const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
     const user = JSON.parse(localStorage.getItem('profile'));
 
-    const [postData, setPostData] = useState({ title: '', message: '', tags: '', selectedFile: '', creatorAvt: (user?.result?.imageUrl || user?.result?.avt || '') });
+    const [postData, setPostData] = useState({ title: '', message: '', tags: '', selectedFile: '', creatorAvt: (user?.result?.imageUrl || user?.result?.avt || ''), visibility: 'public' });
     const post = useSelector((state) => {
         return currentId ? state.posts.find((p) => { return p._id === currentId }) : null
     });
@@ -116,7 +127,7 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
 
     const clear = () => {
         setCurrentId(0);
-        setPostData({ title: '', message: '', tags: '', selectedFile: '' })
+        setPostData({ title: '', message: '', tags: '', selectedFile: '', creatorAvt: (user?.result?.imageUrl || user?.result?.avt || ''), visibility: 'public' })
     }
 
     const handleFileRead = async (event) => {
@@ -151,15 +162,6 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                         <TextField name="title" required variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
                         <TextField name="message" required variant="outlined" label="Message" fullWidth multiline rows={4} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
                         <TextField name="tags" required variant="outlined" label="Tags (comma separated)" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })} />
-                        {/* <div className={classes.fileInput}>
-                            <FileBase
-                                type="file"
-                                required
-                                multiple={false}
-                                inputProps={{ accept: 'image/*, .xlsx, .xls, .csv, .pdf, .pptx, .pptm, .ppt' }}
-                                InputProps={{ style: { display: 'none' } }}
-                                onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />
-                        </div> */}
                         <TextField
                             id="originalFileName2"
                             type="file"
@@ -173,6 +175,27 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                             required={currentId === 0}
                             fullWidth
                         />
+                        <FormControl variant="outlined" className={classes.formControl}>
+                            <InputLabel htmlFor="outlined-age-native-simple">Visibility</InputLabel>
+                            <Select
+                                native
+                                value={postData.visibility}
+                                onChange={(e) => setPostData({ ...postData, visibility: e.target.value })}
+                                label="Visibility"
+                                inputProps={{
+                                    name: 'age',
+                                    id: 'outlined-age-native-simple',
+                                }}
+                            >
+                                <option value={'public'}>Public</option>
+                                <option value={'followers'}>Follower</option>
+                                {
+                                    (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
+                                    && <option value={'oops'}>Oops</option>
+                                }
+                                <option value={'onlyMe'}>Only me</option>
+                            </Select>
+                        </FormControl>
                         <Button startIcon={<CloudUploadIcon />} className={`${classes.buttonSubmit} ${classes.uploadMemory}`} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
                         <Button className={classes.clearMemory} variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
                     </form>

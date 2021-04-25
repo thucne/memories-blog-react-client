@@ -31,6 +31,7 @@ import { LinearProgress } from '@material-ui/core';
 import TuneIcon from '@material-ui/icons/Tune';
 import { postComment, editComment } from '../../../actions/posts';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import FacebookProgress from '../../Connection/FacebookProgress';
 
 import Wall from '../../Connection/Wall';
 
@@ -53,7 +54,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
     const [edit, setEdit] = useState('');
     const scrollComment = useRef(null);
     const [showUserAvt, setShowUserAvt] = useState(false);
-
+    const [progress, setProgress] = useState(false);
     const [isPostingComment, setIsPostingComment] = useState(false);
 
     const [openWall, setOpenWall] = useState(false);
@@ -240,7 +241,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                                 <div onClick={() => setShowUserAvt(true)}><Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
                                     {/* <AssignmentIcon style={{ color: 'green' }} /> */}
                                 </Avatar></div>
-                                <div onClick={() => setOpenWall(true)} style={{cursor: 'pointer'}}>
+                                <div onClick={() => setOpenWall(true)} style={{ cursor: 'pointer' }}>
                                     <Typography className={classes.username} variant="h6">
                                         {avts.filter((avt) => avt.id === post.creator)[0] ? avts.filter((avt) => avt.id === post.creator)[0]?.name : post.name}
                                     </Typography>
@@ -249,7 +250,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                                 <div onClick={() => setShowUserAvt(true)}><Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
                                     {/* <AssignmentIcon style={{ color: 'green' }} /> */}
                                 </Avatar></div>
-                                <div onClick={() => setOpenWall(true)} style={{cursor: 'pointer'}}>
+                                <div onClick={() => setOpenWall(true)} style={{ cursor: 'pointer' }}>
                                     <Typography className={classes.username} variant="h6">
                                         {post.name}
                                     </Typography>
@@ -312,9 +313,16 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                     <Typography className={classes.message} variant="body2" color="textSecondary" component="p">{post.message}</Typography>
                 </CardContent>
                 <CardActions className={classes.cardActions}>
-                    <Button size="small" color="primary" disabled={!user?.result} onClick={() => dispatch(likePost(post._id))}>
-                        <Likes />
-                    </Button>
+                    {
+                        progress ? <FacebookProgress /> :
+                            <Button size="small" color="primary" disabled={!user?.result} onClick={() => {
+                                setProgress(true);
+                                dispatch(likePost(post._id)).then(() => setProgress(false)).catch(() => setProgress(false));
+                            }}>
+                                <Likes />
+                            </Button>
+                    }
+
                     {
                         (true || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.googleId) > -1) && (
                             <Button onClick={handleShowAll} size="small" color="primary" disabled={!user?.result}>

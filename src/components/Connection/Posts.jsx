@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, LinearProgress, Typography } from '@material-ui/core';
+import { Grid, LinearProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Card from '@material-ui/core/Card';

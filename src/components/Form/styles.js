@@ -48,4 +48,9 @@ export default makeStyles((theme) => ({
   input: {
     display: 'none',
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    width: '100%'
+  },
 }));

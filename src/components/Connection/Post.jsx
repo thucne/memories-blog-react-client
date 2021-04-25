@@ -17,6 +17,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import FacebookProgress from './FacebookProgress';
+import { likePost } from '../../actions/posts';
+import { useDispatch } from 'react-redux';
+import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +49,10 @@ const Post = ({ post }) => {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const avts = useSelector((state) => state.getAVTs);
+    const [progress, setProgress] = React.useState(false);
+    const history = useHistory();
+    const user = JSON.parse(localStorage.getItem('profile'));
+    const dispatch = useDispatch();
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -83,12 +91,18 @@ const Post = ({ post }) => {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                {/* <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share">
+                {
+                    progress ? <FacebookProgress /> :
+                        <IconButton aria-label="add to favorites" onClick={() => {
+                            setProgress(true);
+                            dispatch(likePost(post._id)).then(() => setProgress(false)).catch(() => setProgress(false));
+                        }}>
+                            <FavoriteIcon style={{ color: post.likes.length > 0 ? (post.likes.find((like) => like === (user?.result?.googleId || user?.result?._id || user?.result?.ggId)) ? 'red' : '') : '' }} />
+                        </IconButton>
+                }
+                <IconButton aria-label="share" onClick={()=>history.push(`/see/${post._id}`)}>
                     <ShareIcon />
-                </IconButton> */}
+                </IconButton>
                 <IconButton
                     className={clsx(classes.expand, {
                         [classes.expandOpen]: expanded,
@@ -102,7 +116,6 @@ const Post = ({ post }) => {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography paragraph>Method:</Typography>
                     <Typography paragraph>
                         {post.message}
                     </Typography>

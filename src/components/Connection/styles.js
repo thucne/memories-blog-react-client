@@ -42,7 +42,7 @@ export default makeStyles((theme) => ({
     flex2: {
         display: 'flex',
         alignItems: 'space-between',
-        justifyContent: 'center',
+        justifyContent: '',
         flexDirection: 'column',
         width: '100%'
     },
@@ -51,6 +51,14 @@ export default makeStyles((theme) => ({
         alignItems: 'flex-start',
         justifyContent: 'center',
         flexDirection: 'column',
+        width: '100%',
+        // padding: '10px 5px 10px 5px'
+    },
+    flex3Row: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        flexDirection: 'row',
         width: '100%',
         // padding: '10px 5px 10px 5px'
     },
@@ -96,6 +104,14 @@ export default makeStyles((theme) => ({
     },
     decor: {
         backgroundColor: '#bbdefb',
+        borderRadius: '10px',
+        width: '100%',
+        height: '100%',
+        padding: '10px 20px 10px 20px',
+        position: 'inherit'
+    },
+    decor2: {
+        backgroundColor: '#e0e0e0',
         borderRadius: '10px',
         width: '100%',
         height: '100%',

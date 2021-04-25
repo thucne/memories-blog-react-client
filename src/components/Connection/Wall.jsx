@@ -23,6 +23,8 @@ import Looks5OutlinedIcon from '@material-ui/icons/Looks5Outlined';
 import Looks6OutlinedIcon from '@material-ui/icons/Looks6Outlined';
 import SubscriptionsOutlinedIcon from '@material-ui/icons/SubscriptionsOutlined';
 import SubjectOutlinedIcon from '@material-ui/icons/SubjectOutlined';
+import Skeleton from '@material-ui/lab/Skeleton';
+import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 
 
 import Posts from './Posts';
@@ -47,7 +49,7 @@ const Wall = ({ id, open, setOpen }) => {
 
     if (!posts.length) {
         if (rawPosts) {
-            for (let i = 0;  i < rawPosts.length; i++) {
+            for (let i = 0; i < rawPosts.length; i++) {
                 if (rawPosts[i]['creator'] === id) posts.push(rawPosts[i]);
             }
         }
@@ -58,7 +60,7 @@ const Wall = ({ id, open, setOpen }) => {
     const [showAlert, setShowAlert] = useState(false);
     const [progress, setProgress] = useState(false);
     const [tab, setTab] = useState(0);
-
+    const [loading, setLoading] = useState(false);
 
     const state = useSelector((state) => state.user.info.info.follow);
 
@@ -103,14 +105,17 @@ const Wall = ({ id, open, setOpen }) => {
     }
 
     useEffect(() => {
+        setLoading(true);
         dispatch(getWall(id)).then((result) => {
             setKindAlert('success');
             setAlertContent('Done!');
             setShowAlert(true);
+            setLoading(false);
         }).catch((error) => {
             setKindAlert('error');
             setAlertContent(error.message);
             setShowAlert(true);
+            setLoading(false);
         });
     }, [dispatch, id]);
 
@@ -144,7 +149,9 @@ const Wall = ({ id, open, setOpen }) => {
         return <Grid className={classes.fullWidthFlexScretch} container spacing={2}>
             <Grid item className={classes.flex} xs={12}>
                 <Avatar src='photo.png' alt='img' className={classes.large} />
-                <Typography variant="h5">Seeing {wall?.info?.name}'s wall</Typography>
+                {
+                    loading ? <Skeleton width={250} /> : <Typography variant="h5">Seeing {wall?.info?.name}'s wall</Typography>
+                }
             </Grid>
         </Grid>
     }
@@ -159,6 +166,7 @@ const Wall = ({ id, open, setOpen }) => {
                 <ToggleTabs tab={tab} setTab={setTab} />
             </Grid>
             <Grid container className={`${classes.fullWidthFlexScretch} ${classes.align}`} spacing={3}>
+
                 <Grid item className={`${classes.flex}`} md={3} xs={12} style={{ padding: '5px', height: 'fit-content' }}>
                     <div className={classes.decor} style={{ color: '#304ffe' }}>
                         <Typography variant="h4" >About</Typography>
@@ -170,7 +178,9 @@ const Wall = ({ id, open, setOpen }) => {
                                 <Typography variant="body1">Name</Typography>
                             </Grid>
                             <Grid item xs={8} className={classes.flex4}>
-                                <Typography variant="body1" >{wall?.info?.name ? wall.info.name : ''}</Typography>
+                                {
+                                    loading ? <Skeleton width='100%' /> : <Typography variant="body1" >{wall?.info?.name ? wall.info.name : ''}</Typography>
+                                }
                             </Grid>
                         </Grid>
                         <Grid container className={`${classes.custom}`}>
@@ -181,26 +191,54 @@ const Wall = ({ id, open, setOpen }) => {
                                 <Typography variant="body1">Email</Typography>
                             </Grid>
                             <Grid item xs={8} className={classes.flex4}>
-                                <Typography variant="body1" >{wall?.info?.email ? wall.info.email : ''}</Typography>
+                                {
+                                    loading ? <Skeleton width='100%' /> : <Typography variant="body1" >{wall?.info?.email ? wall.info.email : ''}</Typography>
+                                }
                             </Grid>
                         </Grid>
                         {
-                            infoKeyValue.map((key, index) => {
+                            loading ? infoKeyValue.map((key, index) => {
                                 return (
-                                    <Grid container className={`${classes.custom}`} key={`${key}abc${index}`} style={{overflow: 'hidden'}}>
+                                    <Grid container className={`${classes.custom}`} key={`${key}abc${index}`} style={{ overflow: 'hidden' }}>
+                                        <Grid item xs={1} className={classes.flex3}>
+                                            <Skeleton variant="circle" width='100%' height='100%' />
+                                        </Grid>
+                                        <Grid item xs={3} className={classes.flex3}>
+                                            <Skeleton width='90%' />
+                                        </Grid>
+                                        <Grid item xs={8} className={classes.flex4} style={{ overflow: 'hidden' }} >
+                                            <Skeleton width='100%' />
+                                        </Grid>
+                                    </Grid>
+                                )
+                            }) : infoKeyValue.map((key, index) => {
+                                return (
+                                    <Grid container className={`${classes.custom}`} key={`${key}abc${index}`} style={{ overflow: 'hidden' }}>
                                         <Grid item xs={1} className={classes.flex3}>
                                             {key.icon}
                                         </Grid>
                                         <Grid item xs={3} className={classes.flex3}>
                                             <Typography variant="body1">{key.key.charAt(0).toUpperCase() + key.key.slice(1)}</Typography>
                                         </Grid>
-                                        <Grid item xs={8} className={classes.flex4} style={{overflow: 'hidden'}} >
-                                            <Typography variant="body1" >{(typeof key.value === 'string' || key.value instanceof String) ? (key.value.charAt(0).toUpperCase() + key.value.slice(1)) : (Array.isArray(key.value) ? key.value.length: (key.value === true ? 'True': 'False'))}</Typography>
+                                        <Grid item xs={8} className={classes.flex4} style={{ overflow: 'hidden' }} >
+                                            <Typography variant="body1" >{(typeof key.value === 'string' || key.value instanceof String) ? (key.value.charAt(0).toUpperCase() + key.value.slice(1)) : (Array.isArray(key.value) ? key.value.length : (key.value === true ? 'True' : 'False'))}</Typography>
                                         </Grid>
                                     </Grid>
                                 )
                             })
                         }
+                    </div>
+                    <div className={classes.decor2} style={{color: '#424242', marginTop: '5px'}}>
+                        <Grid container className={`${classes.custom}`}>
+                            <Grid item xs={12} className={classes.flex3Row}>
+                                <HelpOutlineOutlinedIcon />
+                                <Typography variant="body1" >Note</Typography>
+                            </Grid>
+                            <Grid item xs={4}><Typography variant="body2" >1. Subcribe</Typography></Grid>
+                            <Grid item xs={8}><Typography variant="body2" >This is their subscription to email reception.</Typography></Grid>
+                            <Grid item xs={4}><Typography variant="body2" >2. Follow</Typography></Grid>
+                            <Grid item xs={8}><Typography variant="body2" >These are the people this person follows.</Typography></Grid>
+                        </Grid>
                     </div>
                 </Grid>
                 <Grid item className={`${classes.flex}`} md={9} xs={12} style={{ padding: '5px', maxHeight: '500px', overflow: 'hidden' }}>
@@ -208,9 +246,9 @@ const Wall = ({ id, open, setOpen }) => {
                         <Typography variant="h4">MEmories</Typography>
                         <Typography variant="subtitle2">You can only see his/her public, for-you-as-a-follower or for-you-as-a-friend MEmories</Typography>
                         <div style={{ maxHeight: '380px', overflowY: 'scroll', position: 'relative' }}>
-                            <Posts id={id}/>
-                    </div>
+                            <Posts id={id} />
                         </div>
+                    </div>
                 </Grid>
             </Grid>
         </Grid>
@@ -233,8 +271,8 @@ const Wall = ({ id, open, setOpen }) => {
 
     return <Container maxWidth="lg" style={{ padding: 0 }}>
         <div className={classes.rootAlert}>
-            <Snackbar open={showAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-                <Alert variant="filled" severity={kindAlert}>{alertContent}</Alert>
+            <Snackbar open={showAlert} autoHideDuration={1000} onClose={handleCloseAlert}>
+                <Alert variant="filled" severity={kindAlert} onClose={handleCloseAlert}>{alertContent}</Alert>
             </Snackbar>
         </div>
         <CustomDialog open={open} setOpen={setOpen} node1={<Node1 />} node2={<Node2 />} node3={<Node3 />} />

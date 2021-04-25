@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@material-ui/core';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, useParams } from 'react-router-dom';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Notifications } from 'react-push-notification';
 
@@ -79,6 +79,11 @@ const App = () => {
         dispatch(getNoti());
     }, [dispatch]);
 
+    const See = () => {
+        let {id} = useParams();
+
+        return <h3 style={{fontSize: '100px'}}>Requested topic ID: {id}</h3>;
+    }
 
     return (
         <BrowserRouter>
@@ -116,6 +121,7 @@ const App = () => {
                                     <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} />} />
                                     <Route path="/chat" exact render={props => <Chat {...props} setLinear={setLinear} />} />
                                     <Route path="/info" exact render={props => <Info {...props} setLinear={setLinear} setIsInfo={setIsInfo} setSearchKey={setSearchKey} searchKey={searchKey} />} />
+                                    <Route path="/see/:id" exact render={props => <See {...props} setLinear={setLinear} />} />
                                 </Switch>
                             </Container>
                         </>

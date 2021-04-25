@@ -26,7 +26,7 @@ const getUniqueListBy = (arr, key) => {
 function SimpleDialog(props) {
   const classes = useStyles();
   const { onClose, selectedValue, open, emails } = props;
-
+  
   const handleClose = () => {
     onClose(selectedValue);
   };
