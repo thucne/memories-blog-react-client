@@ -44,3 +44,4 @@ export const getInvitationCode = () => API.post('/invite');
 export const checkEmail = (email) => API.get(`/email/find/${email}`);
 
 export const getWall = (id) => API.get(`/wall/${id}`);
+export const toggleFollow = (id) => API.get(`/wall/toggleFollow/${id}`);

@@ -23,11 +23,44 @@ export default makeStyles((theme) => ({
         width: '100%',
         height: '100%'
     },
+    fullWidthFlexStretch2: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        padding: 0
+    },
     flex: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
+        width: '100%'
+    },
+    flex2: {
+        display: 'flex',
+        alignItems: 'space-between',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        width: '100%'
+    },
+    flex3: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        width: '100%',
+        // padding: '10px 5px 10px 5px'
+    },
+    flex4: {
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        width: '100%',
+        // padding: '10px 5px 10px 0px'
     },
     large: {
         width: theme.spacing(7),
@@ -41,16 +74,52 @@ export default makeStyles((theme) => ({
     coverbackground: {
         position: 'relative',
         width: '100%',
-        height: '100px',
+        height: '150px',
         overflow: 'hidden'
     },
     avatar: {
         display: 'flex',
         position: 'relative',
-        top: '-45px',
+        top: '-85px',
         justifyContent: 'center',
         alignItems: 'center',
-        width: theme.spacing(10),
-        height: theme.spacing(10)
-    }
+        width: theme.spacing(20),
+        height: theme.spacing(20)
+    },
+    custom: {
+        postion: 'relative',
+        top: '-10px',
+    },
+    align: {
+        position: 'relative',
+        top: '-65px'
+    },
+    decor: {
+        backgroundColor: '#bbdefb',
+        borderRadius: '10px',
+        width: '100%',
+        height: '100%',
+        padding: '10px 20px 10px 20px',
+        position: 'inherit'
+    },
+    dialog: {
+        borderRadius: '20px',
+    },
+    mainContainer: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    smMargin: {
+        margin: theme.spacing(1),
+    },
+    actionDiv: {
+        textAlign: 'center',
+    },
+    card: {
+        maxWidth: 345,
+        margin: theme.spacing(2),
+    },
+    media: {
+        height: 190,
+    },
 }));

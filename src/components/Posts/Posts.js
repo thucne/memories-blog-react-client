@@ -13,7 +13,7 @@ const Posts = ({ setCurrentId, setLinear, searchKey }) => {
     let posts = useSelector((state) => state.posts);
 
     const user = JSON.parse(localStorage.getItem('profile'));
-    
+
     return (
         user ? (
             !posts.length ?

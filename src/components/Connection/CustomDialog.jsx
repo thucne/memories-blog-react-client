@@ -3,8 +3,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Container } from '@material-ui/core';
+import useStyles from './styles';
 
 export default function CustomDialog({ open, setOpen, node1, node2, node3 }) {
+    const classes = useStyles();
 
     const handleClose = () => {
         setOpen(false);
@@ -22,16 +25,18 @@ export default function CustomDialog({ open, setOpen, node1, node2, node3 }) {
     }, [open]);
 
     return (
-        <div>
+        <Container maxWidth="xl">
             <Dialog
                 open={open}
                 onClose={handleClose}
                 scroll='paper'
                 aria-labelledby="scroll-dialog-title"
                 aria-describedby="scroll-dialog-description"
+                maxWidth='lg'
+                classes={{paperWidthLg: classes.dialog}}
             >
                 <DialogTitle id="scroll-dialog-title">{node1}</DialogTitle>
-                <DialogContent dividers={true}>
+                <DialogContent dividers={true} style={{ padding: 0 }}>
                     <DialogContent
                         id="scroll-dialog-description"
                         ref={descriptionElementRef}
@@ -44,6 +49,6 @@ export default function CustomDialog({ open, setOpen, node1, node2, node3 }) {
                     {node3}
                 </DialogActions>
             </Dialog>
-        </div>
+        </Container>
     );
 }
