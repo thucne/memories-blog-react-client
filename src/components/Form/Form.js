@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper, CircularProgress } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, CircularProgress, MenuItem } from '@material-ui/core';
 // import FileBase from 'react-file-base64';
 import { useDispatch, useSelector } from 'react-redux';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -11,6 +11,11 @@ import FormSnackBar from './FormSnackBar';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+
+import PublicIcon from '@material-ui/icons/Public';
+import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
+import CenterFocusWeakIcon from '@material-ui/icons/CenterFocusWeak';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 const pushNoti = (title, subtitle, message) => {
     addNotification({
@@ -175,10 +180,9 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                             required={currentId === 0}
                             fullWidth
                         />
-                        <FormControl variant="outlined" className={classes.formControl}>
+                        <FormControl variant="outlined" className={classes.formControl}  required>
                             <InputLabel htmlFor="outlined-age-native-simple">Visibility</InputLabel>
                             <Select
-                                native
                                 value={postData.visibility}
                                 onChange={(e) => setPostData({ ...postData, visibility: e.target.value })}
                                 label="Visibility"
@@ -186,14 +190,15 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                                     name: 'age',
                                     id: 'outlined-age-native-simple',
                                 }}
+                                classes={{root : classes.myOverride}}
                             >
-                                <option value={'public'}>Public</option>
-                                <option value={'followers'}>Follower</option>
+                                <MenuItem value={'public'} ><Button classes={{root: classes.disableRipple}} startIcon={<PublicIcon  />}>Public</Button></MenuItem>
+                                <MenuItem value={'followers'}><Button classes={{root: classes.disableRipple}} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
                                 {
                                     (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
-                                    && <option value={'oops'}>Oops</option>
+                                    && <MenuItem value={'oops'}><Button classes={{root: classes.disableRipple}} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
                                 }
-                                <option value={'onlyMe'}>Only me</option>
+                                <MenuItem value={'onlyMe'}><Button classes={{root: classes.disableRipple}} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>
                             </Select>
                         </FormControl>
                         <Button startIcon={<CloudUploadIcon />} className={`${classes.buttonSubmit} ${classes.uploadMemory}`} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>

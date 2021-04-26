@@ -228,7 +228,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                 showUserAvt && <FullImage open={showUserAvt} setOpen={setShowUserAvt} img={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt} />
             }
             {
-                openWall && <Wall id={post.creator} open={openWall} setOpen={setOpenWall} />
+                openWall && <Wall id={post.creator} open={openWall} setOpen={setOpenWall} userId={user._id}/>
             }
             <Card ref={myToBeSharedCard} className={post.oops ? `${classes.card} ${classes.cardOops}` : `${classes.card} ${classes.cardNotOops}`}>
                 <div onClick={handleMouseHover}>
