@@ -4,13 +4,11 @@ import * as api from '../api';
 export const getInfo = () => async (dispatch) => {
     try {
         const { data } = await api.getInfo();
-
-        dispatch({ type: GET_INFO, data });
-
-        return data;
+        
+        return dispatch({ type: GET_INFO, data });
 
     } catch (error) {
-        dispatch({ type: GET_INFO, data: {message:  error.response.data.message}});
+        dispatch({ type: GET_INFO, data: { message: error.response.data.message } });
 
         return { message: error.response.data.message };
     }
@@ -31,9 +29,9 @@ export const updateInfo = (formData) => async (dispatch) => {
 
 export const toggleSubcribe = () => async (dispatch) => {
     try {
-        const {data} = await api.toggleSubcribe();
+        const { data } = await api.toggleSubcribe();
 
-        return dispatch({type: UPDATE_INFO, data});
+        return dispatch({ type: UPDATE_INFO, data });
     } catch (error) {
         return { message: error.response.data.message };
     }

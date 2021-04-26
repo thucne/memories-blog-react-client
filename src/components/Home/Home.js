@@ -24,33 +24,11 @@ const Home = (props) => {
         return [];
     });
     useEffect(() => {
-
         setLinear(true);
-        dispatch(getInfo())
-            .then(() => {
-                dispatch(getPosts())
-                    .then((result) => {
-                        dispatch(getAVTs())
-                            .then((result) => {
-                                dispatch(getComments())
-                                    .then((result) => {
-                                        setLinear(false);
-                                    })
-                                    .catch((error) => {
-                                        setLinear(false);
-                                    });
-                            })
-                            .catch((error) => {
-                                setLinear(false);
-                            });
-                    })
-                    .catch((error) => {
-                        setLinear(false);
-                    });
-            })
-            .catch((error) => setLinear(false));
-
-
+        dispatch(getInfo());
+        dispatch(getPosts());
+        dispatch(getAVTs());
+        dispatch(getComments());
     }, [dispatch, setLinear]);
 
 

@@ -51,6 +51,21 @@ export default makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-    width: '100%'
+    width: '100%',
+    height: 'fit-content',
   },
+  myOverride: {
+    height: 'fit-content',
+    padding: '5px 5px 5px 10px',
+  },
+  disableRipple: {
+    '&:hover': {
+      background: 'none !important',
+      opacity: 1
+    },
+    "& .MuiTouchRipple-root span": {
+      background: 'none !important',
+      opacity: 1
+    }
+  }
 }));

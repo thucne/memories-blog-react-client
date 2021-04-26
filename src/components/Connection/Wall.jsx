@@ -38,10 +38,10 @@ const httpToHTTPS = (str, from, what) => {
     }
     return '';
 }
-const Wall = ({ id, open, setOpen }) => {
+const Wall = ({ id, open, setOpen, userId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-
+    
     const wall = useSelector((state) => state.wall.wall);
     const rawPosts = useSelector((state) => state.posts);
 
@@ -221,7 +221,7 @@ const Wall = ({ id, open, setOpen }) => {
                                             <Typography variant="body1">{key.key.charAt(0).toUpperCase() + key.key.slice(1)}</Typography>
                                         </Grid>
                                         <Grid item xs={8} className={classes.flex4} style={{ overflow: 'hidden' }} >
-                                            <Typography variant="body1" >{(typeof key.value === 'string' || key.value instanceof String) ? (key.value.charAt(0).toUpperCase() + key.value.slice(1)) : (Array.isArray(key.value) ? key.value.length : (key.value === true ? 'True' : 'False'))}</Typography>
+                                            <Typography variant="body1" >{(typeof key.value === 'string' || key.value instanceof String) ? (key.value.charAt(0).toUpperCase() + key.value.slice(1)) : (Array.isArray(key.value) ? (key.value.length) : (key.value === true ? 'True' : 'False'))}</Typography>
                                         </Grid>
                                     </Grid>
                                 )
@@ -235,9 +235,9 @@ const Wall = ({ id, open, setOpen }) => {
                                 <Typography variant="body1" >Note</Typography>
                             </Grid>
                             <Grid item xs={4}><Typography variant="body2" >1. Subcribe</Typography></Grid>
-                            <Grid item xs={8}><Typography variant="body2" >This is their subscription to email reception.</Typography></Grid>
+                            <Grid item xs={8}><Typography variant="body2" >This is their subscription to email reception. It means, if you react to his/her post, he/she will be received an email.</Typography></Grid>
                             <Grid item xs={4}><Typography variant="body2" >2. Follow</Typography></Grid>
-                            <Grid item xs={8}><Typography variant="body2" >These are the people this person follows.</Typography></Grid>
+                            <Grid item xs={8}><Typography variant="body2" >He/she's 'following' number.</Typography></Grid>
                         </Grid>
                     </div>
                 </Grid>
