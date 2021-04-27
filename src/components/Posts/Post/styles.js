@@ -171,8 +171,8 @@ export default makeStyles((theme) => ({
     // boxShadow: '0 3px 5px 2px rgba(239, 241, 241, 1)',
   },
   myBadge: {
-    backgroundColor: 'red',
-    color: 'yellow'
+    backgroundColor: 'red !important',
+    color: 'yellow !important'
   },
   clearr: {
     padding: '0px',
