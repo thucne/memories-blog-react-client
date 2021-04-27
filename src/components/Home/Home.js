@@ -59,7 +59,7 @@ const Home = (props) => {
                         user ?
                             <Grid container spacing={0} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row', justifiContent: 'center', alignItems: 'stretch', padding: '10px', backgroundColor: 'white', borderRadius: '8px', margin: '5px 10px 5px 10px' }}>
                                 <Grid item xs={2} className={classes.flex}>
-                                    <Avatar src={user?.result?.avt ? httpToHTTPS(user.result.avt, 4, 's') : ''} />
+                                    <Avatar src={user?.result?.avt ? httpToHTTPS(user.result.avt, 4, 's') : (user?.result?.imageUrl ? user.result.imageUrl : '')} />
                                 </Grid>
                                 <Grid item xs={10} className={classes.flex}>
                                     <Button onClick={handleClick} classes={{label: classes.white}} className={classes.whatisinyourmind}>{user?.result?.name ? `Hey ${user?.result?.name}, what's in your mind?` : `Hey there, what'is in your mind?`}</Button>
