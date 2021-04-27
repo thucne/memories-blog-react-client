@@ -75,6 +75,7 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad, open2, setOpen2 }
                     setSnackType('success');
                     pushNoti('Succesfully', 'You have just posted a MEmory!', 'What a wonderful day!');
                     clear();
+                    if (setOpen2) setOpen2(false);
                 }).catch((error) => {
                     setProgress(false);
                     setLinear(false);
@@ -83,6 +84,8 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad, open2, setOpen2 }
                     setSnackType('warning');
                     pushNoti('Oops', 'Something went wrong...!', 'Double check your action and try again please!');
                     if (setIsLoad) setIsLoad(false);
+                    if (setOpen2) setOpen2(false);
+
                 });
         } else {
             dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }))
@@ -96,6 +99,8 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad, open2, setOpen2 }
                     pushNoti('Succesfully', 'You have just updated a MEmory!', 'What a wonderful day!');
                     clear();
                     getPosts();
+                    if (setOpen2) setOpen2(false);
+
                 }).catch((error) => {
                     setProgress(false);
                     setLinear(false);
@@ -104,6 +109,8 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad, open2, setOpen2 }
                     setSnackType('warning');
                     pushNoti('Oops', 'Something went wrong...!', 'Double check your action and try again please!');
                     if (setIsLoad) setIsLoad(false);
+                    if (setOpen2) setOpen2(false);
+
                 });
         }
     }

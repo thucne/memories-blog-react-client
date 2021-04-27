@@ -25,7 +25,7 @@ const Chat = (props) => {
     const { setLinear } = props;
 
     return (
-        <>
+        <div style={{position: 'relative', marginTop: '90px'}}>
             {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
             }
@@ -37,7 +37,7 @@ const Chat = (props) => {
                 renderChatFeed={(chatAppProps) => <ChatFeed {...chatAppProps} setLinear={setLinear} />}
                 onNewMessage={() => { new Audio('https://res.cloudinary.com/katyperrycbt/video/upload/v1615222391/juntos-607_k7pgr8.ogg').play(); setLinear(false) }}
             />
-        </>
+        </div>
     )
 }
 

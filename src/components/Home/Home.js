@@ -46,7 +46,7 @@ const Home = (props) => {
     }
 
     return (
-        <Grow in={true}>
+        <Grow in={true} style={{position: 'relative', marginTop: '90px'}}>
             <Container style={{ padding: 0 }} classes={{ root: classes.toggle }}>
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>
@@ -57,12 +57,12 @@ const Home = (props) => {
                 <Grid className={classes.mainGrid} container justify="space-between" alignItems="stretch" spacing={3}>
                     {
                         user ?
-                            <Grid containter spacing={0} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row', justifiContent: 'center', alignItems: 'stretch', padding: '10px', backgroundColor: 'lightgray', borderRadius: '8px', margin: '5px 10px 5px 10px' }}>
+                            <Grid container spacing={0} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row', justifiContent: 'center', alignItems: 'stretch', padding: '10px', backgroundColor: 'white', borderRadius: '8px', margin: '5px 10px 5px 10px' }}>
                                 <Grid item xs={2} className={classes.flex}>
                                     <Avatar src={user?.result?.avt ? httpToHTTPS(user.result.avt, 4, 's') : ''} />
                                 </Grid>
                                 <Grid item xs={10} className={classes.flex}>
-                                    <Button onClick={handleClick} style={{ width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.74)', borderRadius: '20px' }}>{user?.result?.name ? `Hey ${user?.result?.name}, what's in your mind?` : `Hey there, what'is in your mind?`}</Button>
+                                    <Button onClick={handleClick} classes={{label: classes.white}} className={classes.whatisinyourmind}>{user?.result?.name ? `Hey ${user?.result?.name}, what's in your mind?` : `Hey there, what'is in your mind?`}</Button>
                                 </Grid>
                             </Grid>
                             :
@@ -71,7 +71,7 @@ const Home = (props) => {
                             </Grid>
                     }
                     <Grid item xs={12} sm={12} md={12}>
-                        <Posts setCurrentId={setCurrentId} setLinear={setLinear} searchKey={searchKey} />
+                        <Posts setCurrentId={setCurrentId} setLinear={setLinear} searchKey={searchKey} setOpenForm={setFormDialog}/>
                     </Grid>
                 </Grid>
             </Container>

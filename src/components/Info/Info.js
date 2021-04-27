@@ -27,7 +27,7 @@ const Info = (props) => {
     if (!user) { history.push('/auth') }
 
     return (
-        <Grow in>
+        <Grow in style={{position: 'relative', marginTop: '90px'}}>
             <Container>
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>

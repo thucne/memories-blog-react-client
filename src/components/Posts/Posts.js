@@ -8,7 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Post from './Post/Post';
 import useStyles from './styles'
 
-const Posts = ({ setCurrentId, setLinear, searchKey }) => {
+const Posts = ({ setCurrentId, setLinear, searchKey, setOpenForm }) => {
     const classes = useStyles();
     let posts = useSelector((state) => state.posts);
 
@@ -54,7 +54,7 @@ const Posts = ({ setCurrentId, setLinear, searchKey }) => {
 
                         }).sort((a, b) => { return (new Date(b.createdAt) - new Date(a.createdAt)) }).map((post) => (
                             <Grid key={post._id} item xs={12} md={12} sm={12} lg={12}>
-                                <Post post={post} setCurrentId={setCurrentId} setLinear={setLinear} />
+                                <Post post={post} setCurrentId={setCurrentId} setLinear={setLinear} setOpenForm={setOpenForm ? setOpenForm : undefined} />
                             </Grid>
                         ))}
                     </Grid>

@@ -1,0 +1,9 @@
+.MuiDrawer-paper {
+    width: 25% !important;
+}
+
+@media (max-width: 800px) {
+    .MuiDrawer-paper {
+        width: 100% !important;
+    }
+}

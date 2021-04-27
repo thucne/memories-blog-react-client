@@ -19,6 +19,7 @@ export default makeStyles((theme) => ({
   },
   image: {
     marginLeft: '15px',
+    height: '50px'
   },
   toolbar: {
     display: 'flex',
@@ -99,7 +100,10 @@ export default makeStyles((theme) => ({
     },
     purple: {
       top: '5px',
-    }
+    },
+    image: {
+      height: '40px'
+    },
   },
   [theme.breakpoints.down('xs')]: {
     appBar: {
@@ -116,7 +120,9 @@ export default makeStyles((theme) => ({
     },
     brandContainer: {
       display: 'block',
-    }
-
+    },
+    image: {
+      height: '30px'
+    },
   }
 }));

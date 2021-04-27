@@ -4,7 +4,8 @@ import { BrowserRouter, Switch, Route, useParams } from 'react-router-dom';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Notifications } from 'react-push-notification';
 
-import Navbar from './components/Navbar/Navbar';
+// import Navbar from './components/Navbar/Navbar';
+import NewNavBar from './components/Navbar/NewNavBar';
 import Home from './components/Home/Home';
 import Auth from './components/Auth/Auth';
 import Chat from './components/Chat/Chat';
@@ -115,7 +116,8 @@ const App = () => {
                             }
                             <Notifications />
                             <Container maxWidth="lg">
-                                <Navbar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey} />
+                                {/* <Navbar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey} /> */}
+                                <NewNavBar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey}/>
                                 <Switch>
                                     <Route path="/" exact render={props => <Home {...props} setLinear={setLinear} setIsInfo={setIsInfo(false)} setSearchKey={setSearchKey} searchKey={searchKey} />} />
                                     <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} />} />

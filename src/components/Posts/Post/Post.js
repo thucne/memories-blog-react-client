@@ -43,7 +43,7 @@ import { updatePost } from '../../../actions/posts';
 
 import Wall from '../../Connection/Wall';
 
-const Post = ({ post, setCurrentId, setLinear }) => {
+const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const avts = useSelector((state) => state.getAVTs);
@@ -338,7 +338,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                 {
                     (user?.result?.googleId === post?.creator || user?.result?._id === post?.creator || user?.result?.ggId === post?.creator) && (
                         <div className={classes.overlay2}>
-                            <Button style={{ color: 'white' }} size="small" onClick={() => setCurrentId(post._id)}>
+                            <Button style={{ color: 'white' }} size="small" onClick={() => {setCurrentId(post._id); if (setOpenForm) setOpenForm(true)}}>
                                 <MoreHorizIcon fontSize="default" />
                             </Button>
                         </div>
@@ -352,29 +352,35 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                                 <ShareIcon />
                             </Button>
                         </div>
-                        {
-                            (user?.result?.googleId === post?.creator || user?.result?._id === post?.creator || user?.result?.ggId === post?.creator) &&
-                            <div className={classes.overlay5}>
-                                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick2} style={{ color: 'lightgray' }} >
+
+
+                        <div className={classes.overlay5}>
+                            <Tooltip title={post.visibility === 'public' ? `Public MEmories, everyone can see it.` : (
+                                post.visibility === 'followers' ? `Followers MEmories, you see it because you've followed this user.` : (
+                                    post.visibilityl === 'oops' ? `You are Oops! You see this ofc!` : `Only MEmory owner can read this MEmory`
+                                )
+                            )}>
+                                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator || user?.result?.ggId === post?.creator) ? handleClick2 : null} style={{ color: 'lightgray' }} >
                                     {icon}
                                 </Button>
-                                <Menu
-                                    id={`custom${post._id}${Date.now()}`}
-                                    anchorEl={anchorEl}
-                                    keepMounted
-                                    open={Boolean(anchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    <MenuItem onClick={() => handleVisibility('public')} value={'public'} ><Button classes={{ root: classes.disableRipple }} startIcon={<PublicIcon />}>Public</Button></MenuItem>
-                                    <MenuItem onClick={() => handleVisibility('followers')} value={'followers'}><Button classes={{ root: classes.disableRipple }} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
-                                    {
-                                        (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
-                                        && <MenuItem onClick={() => handleVisibility('oops')} value={'oops'}><Button classes={{ root: classes.disableRipple }} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
-                                    }
-                                    <MenuItem onClick={() => handleVisibility('onlyMe')} value={'onlyMe'}><Button classes={{ root: classes.disableRipple }} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>
-                                </Menu>
-                            </div>
-                        }
+                            </Tooltip>
+                            <Menu
+                                id={`custom${post._id}${Date.now()}`}
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={() => handleVisibility('public')} value={'public'} ><Button classes={{ root: classes.disableRipple }} startIcon={<PublicIcon />}>Public</Button></MenuItem>
+                                <MenuItem onClick={() => handleVisibility('followers')} value={'followers'}><Button classes={{ root: classes.disableRipple }} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
+                                {
+                                    (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
+                                    && <MenuItem onClick={() => handleVisibility('oops')} value={'oops'}><Button classes={{ root: classes.disableRipple }} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
+                                }
+                                <MenuItem onClick={() => handleVisibility('onlyMe')} value={'onlyMe'}><Button classes={{ root: classes.disableRipple }} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>
+                            </Menu>
+                        </div>
+
                         <div className={classes.overlay4}>
                             <Button style={{ color: 'pink' }} size="small" onClick={showComments}>
                                 <Badge badgeContent={cmts.length} color="primary" classes={{ badge: classes.myBadge }}>
