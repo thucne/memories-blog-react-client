@@ -38,6 +38,7 @@ import Noti from './Noti';
 import ChatIcon from '@material-ui/icons/Chat';
 import FullImage from '../Posts/Post/FullImage';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 dotenv.config();
 
@@ -178,10 +179,16 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
                         </IconButton>
                         <p>Profile</p>
                     </MenuItem>
+                    <MenuItem>
+                        <IconButton color="inherit" onClick={logout}>
+                            <ExitToAppIcon />
+                        </IconButton>
+                        <p>Log out</p>
+                    </MenuItem>
                 </>) : (<>
                     <MenuItem>
                         <IconButton color="inherit" onClick={() => history.push('/auth')}>
-                            <ExitToAppIcon />
+                            <FingerprintIcon />
                         </IconButton>
                     </MenuItem>
                 </>)
@@ -205,7 +212,7 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
             {
                 process.env.REACT_APP_THUC_KATY === user?.result?.email && <Noti openNoti={openNoti} setOpenNoti={setOpenNoti} setLinear={setLinear} />
             }
-            <NewSideMenu sideMenu={sideMenu} setSideMenu={setSideMenu} setOpen={setOpen} setUser={setUser} setIsChat={setIsChat}/>
+            <NewSideMenu sideMenu={sideMenu} setSideMenu={setSideMenu} setOpen={setOpen} setUser={setUser} setIsChat={setIsChat} />
             <AppBar position="fixed">
                 <Toolbar>
                     <IconButton
@@ -284,7 +291,7 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
                             </div>
                         </>) : (<>
                             <IconButton color="inherit" onClick={() => history.push('/auth')}>
-                                <ExitToAppIcon />
+                                <FingerprintIcon />
                             </IconButton>
                         </>)
                     }
