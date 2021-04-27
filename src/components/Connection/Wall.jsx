@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useStyles from './styles';
@@ -28,6 +28,7 @@ import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 
 
 import Posts from './Posts';
+import { getPosts } from '../../actions/posts';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="outlined" {...props} />;
@@ -41,7 +42,7 @@ const httpToHTTPS = (str, from, what) => {
 const Wall = ({ id, open, setOpen, userId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    
+    const tempRef = useRef();
     const wall = useSelector((state) => state.wall.wall);
     const rawPosts = useSelector((state) => state.posts);
 
@@ -61,7 +62,7 @@ const Wall = ({ id, open, setOpen, userId }) => {
     const [progress, setProgress] = useState(false);
     const [tab, setTab] = useState(0);
     const [loading, setLoading] = useState(false);
-
+    // const [width, setWidth] = useState(0);
     const state = useSelector((state) => state.user.info.info.follow);
 
     const followThisUser = state ? (state.indexOf(id) > -1) : false;
@@ -117,6 +118,13 @@ const Wall = ({ id, open, setOpen, userId }) => {
             setShowAlert(true);
             setLoading(false);
         });
+
+        //270, 139, 312, 330
+        // if (tempRef.current) {
+        //     setWidth(
+        //       tempRef.current.offsetWidth,
+        //     );
+        //   }
     }, [dispatch, id]);
 
     const handleCloseAlert = (event, reason) => {
@@ -132,10 +140,18 @@ const Wall = ({ id, open, setOpen, userId }) => {
     const toggleFollowAction = async () => {
         setProgress(true);
         await dispatch(toggleFollow(id)).then((result) => {
-            setKindAlert('success');
-            setAlertContent('Done!');
-            setShowAlert(true);
-            setProgress(false);
+            dispatch(getPosts()).then(() => {
+                setKindAlert('success');
+                setAlertContent('Done!');
+                setShowAlert(true);
+                setProgress(false);
+            }).catch(() => {
+                setKindAlert('success');
+                setAlertContent('Done!');
+                setShowAlert(true);
+                setProgress(false);
+            });
+
         }).catch((error) => {
             setKindAlert('error');
             setAlertContent(error.message);
@@ -165,92 +181,113 @@ const Wall = ({ id, open, setOpen, userId }) => {
             <Grid item className={classes.flex} xs={12}>
                 <ToggleTabs tab={tab} setTab={setTab} />
             </Grid>
-            <Grid container className={`${classes.fullWidthFlexScretch} ${classes.align}`} spacing={3}>
+            {
+                tab === 0 && <Grid container className={`${classes.fullWidthFlexScretch} ${classes.align}`} spacing={3}>
 
-                <Grid item className={`${classes.flex}`} md={3} xs={12} style={{ padding: '5px', height: 'fit-content' }}>
-                    <div className={classes.decor} style={{ color: '#304ffe' }}>
-                        <Typography variant="h4" >About</Typography>
-                        <Grid container className={`${classes.custom}`}>
-                            <Grid item xs={1} className={classes.flex3}>
-                                <ContactsOutlinedIcon />
+                    <Grid item className={`${classes.flex}`} md={3} xs={12} style={{ padding: '5px', height: 'fit-content' }}>
+                        <div className={classes.decor} style={{ color: '#304ffe' }}>
+                            <Typography variant="h4" >About</Typography>
+                            <Grid container className={`${classes.custom}`}>
+                                <Grid item xs={1} className={classes.flex3}>
+                                    <ContactsOutlinedIcon />
+                                </Grid>
+                                <Grid item xs={3} className={classes.flex3}>
+                                    <Typography variant="body1">Name</Typography>
+                                </Grid>
+                                <Grid item xs={8} className={classes.flex4}>
+                                    {
+                                        loading ? <Skeleton width='100%' /> : <Typography variant="body1" >{wall?.info?.name ? wall.info.name : ''}</Typography>
+                                    }
+                                </Grid>
                             </Grid>
-                            <Grid item xs={3} className={classes.flex3}>
-                                <Typography variant="body1">Name</Typography>
+                            <Grid container className={`${classes.custom}`}>
+                                <Grid item xs={1} className={classes.flex3}>
+                                    <MailOutlineOutlinedIcon />
+                                </Grid>
+                                <Grid item xs={3} className={classes.flex3}>
+                                    <Typography variant="body1">Email</Typography>
+                                </Grid>
+                                <Grid item xs={8} className={classes.flex4}>
+                                    {
+                                        loading ? <Skeleton width='100%' /> : <Typography variant="body1" >{wall?.info?.email ? wall.info.email : ''}</Typography>
+                                    }
+                                </Grid>
                             </Grid>
-                            <Grid item xs={8} className={classes.flex4}>
-                                {
-                                    loading ? <Skeleton width='100%' /> : <Typography variant="body1" >{wall?.info?.name ? wall.info.name : ''}</Typography>
-                                }
-                            </Grid>
-                        </Grid>
-                        <Grid container className={`${classes.custom}`}>
-                            <Grid item xs={1} className={classes.flex3}>
-                                <MailOutlineOutlinedIcon />
-                            </Grid>
-                            <Grid item xs={3} className={classes.flex3}>
-                                <Typography variant="body1">Email</Typography>
-                            </Grid>
-                            <Grid item xs={8} className={classes.flex4}>
-                                {
-                                    loading ? <Skeleton width='100%' /> : <Typography variant="body1" >{wall?.info?.email ? wall.info.email : ''}</Typography>
-                                }
-                            </Grid>
-                        </Grid>
-                        {
-                            loading ? infoKeyValue.map((key, index) => {
-                                return (
-                                    <Grid container className={`${classes.custom}`} key={`${key}abc${index}`} style={{ overflow: 'hidden' }}>
-                                        <Grid item xs={1} className={classes.flex3}>
-                                            <Skeleton variant="circle" width='100%' height='100%' />
+                            {
+                                loading ? infoKeyValue.map((key, index) => {
+                                    return (
+                                        <Grid container className={`${classes.custom}`} key={`${key}abc${index}`} style={{ overflow: 'hidden' }}>
+                                            <Grid item xs={1} className={classes.flex3}>
+                                                <Skeleton variant="circle" width='100%' height='100%' />
+                                            </Grid>
+                                            <Grid item xs={3} className={classes.flex3}>
+                                                <Skeleton width='90%' />
+                                            </Grid>
+                                            <Grid item xs={8} className={classes.flex4} style={{ overflow: 'hidden' }} >
+                                                <Skeleton width='100%' />
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={3} className={classes.flex3}>
-                                            <Skeleton width='90%' />
+                                    )
+                                }) : infoKeyValue.map((key, index) => {
+                                    return (
+                                        <Grid container className={`${classes.custom}`} key={`${key}abc${index}`} style={{ overflow: 'hidden' }}>
+                                            <Grid item xs={1} className={classes.flex3}>
+                                                {key.icon}
+                                            </Grid>
+                                            <Grid item xs={3} className={classes.flex3}>
+                                                <Typography variant="body1">{key.key.charAt(0).toUpperCase() + key.key.slice(1)}</Typography>
+                                            </Grid>
+                                            <Grid item xs={8} className={classes.flex4} style={{ overflow: 'hidden' }} >
+                                                <Typography variant="body1" >{(typeof key.value === 'string' || key.value instanceof String) ? (key.value.charAt(0).toUpperCase() + key.value.slice(1)) : (Array.isArray(key.value) ? (key.value.length) : (key.value === true ? 'True' : 'False'))}</Typography>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={8} className={classes.flex4} style={{ overflow: 'hidden' }} >
-                                            <Skeleton width='100%' />
-                                        </Grid>
-                                    </Grid>
-                                )
-                            }) : infoKeyValue.map((key, index) => {
-                                return (
-                                    <Grid container className={`${classes.custom}`} key={`${key}abc${index}`} style={{ overflow: 'hidden' }}>
-                                        <Grid item xs={1} className={classes.flex3}>
-                                            {key.icon}
-                                        </Grid>
-                                        <Grid item xs={3} className={classes.flex3}>
-                                            <Typography variant="body1">{key.key.charAt(0).toUpperCase() + key.key.slice(1)}</Typography>
-                                        </Grid>
-                                        <Grid item xs={8} className={classes.flex4} style={{ overflow: 'hidden' }} >
-                                            <Typography variant="body1" >{(typeof key.value === 'string' || key.value instanceof String) ? (key.value.charAt(0).toUpperCase() + key.value.slice(1)) : (Array.isArray(key.value) ? (key.value.length) : (key.value === true ? 'True' : 'False'))}</Typography>
-                                        </Grid>
-                                    </Grid>
-                                )
-                            })
-                        }
-                    </div>
-                    <div className={classes.decor2} style={{color: '#424242', marginTop: '5px'}}>
-                        <Grid container className={`${classes.custom}`}>
-                            <Grid item xs={12} className={classes.flex3Row}>
-                                <HelpOutlineOutlinedIcon />
-                                <Typography variant="body1" >Note</Typography>
-                            </Grid>
-                            <Grid item xs={4}><Typography variant="body2" >1. Subcribe</Typography></Grid>
-                            <Grid item xs={8}><Typography variant="body2" >This is their subscription to email reception. It means, if you react to his/her post, he/she will be received an email.</Typography></Grid>
-                            <Grid item xs={4}><Typography variant="body2" >2. Follow</Typography></Grid>
-                            <Grid item xs={8}><Typography variant="body2" >He/she's 'following' number.</Typography></Grid>
-                        </Grid>
-                    </div>
-                </Grid>
-                <Grid item className={`${classes.flex}`} md={9} xs={12} style={{ padding: '5px', maxHeight: '500px', overflow: 'hidden' }}>
-                    <div className={classes.decor} style={{ color: '#304ffe' }}>
-                        <Typography variant="h4">MEmories</Typography>
-                        <Typography variant="subtitle2">You can only see his/her public, for-you-as-a-follower or for-you-as-a-friend MEmories</Typography>
-                        <div style={{ maxHeight: '380px', overflowY: 'scroll', position: 'relative' }}>
-                            <Posts id={id} />
+                                    )
+                                })
+                            }
                         </div>
-                    </div>
+                        <div className={classes.decor2} style={{ color: '#424242', marginTop: '5px' }}>
+                            <Grid container className={`${classes.custom}`}>
+                                <Grid item xs={12} className={classes.flex3Row}>
+                                    <HelpOutlineOutlinedIcon />
+                                    <Typography variant="body1" >Note</Typography>
+                                </Grid>
+                                <Grid item xs={4}><Typography variant="body2" >1. Subcribe</Typography></Grid>
+                                <Grid item xs={8}><Typography variant="body2" >This is their subscription to email reception. It means, if you react to his/her post, he/she will be received an email.</Typography></Grid>
+                                <Grid item xs={4}><Typography variant="body2" >2. Follow</Typography></Grid>
+                                <Grid item xs={8}><Typography variant="body2" >He/she's 'following' number.</Typography></Grid>
+                            </Grid>
+                        </div>
+                    </Grid>
+                    <Grid item className={`${classes.flex}`} md={9} xs={12} style={{ padding: '5px', maxHeight: '500px', overflow: 'hidden' }}>
+                        <div className={classes.decor} style={{ color: '#304ffe' }}>
+                            <Typography variant="h4">MEmories</Typography>
+                            <Typography variant="subtitle2">You can only see his/her public, for-you-as-a-follower or for-you-as-a-friend MEmories</Typography>
+                            <div style={{ maxHeight: '380px', overflowY: 'scroll', position: 'relative' }}>
+                                <Posts id={id} />
+                            </div>
+                        </div>
+                    </Grid>
                 </Grid>
-            </Grid>
+            }
+            {
+                tab === 1 && <Grid container className={`${classes.fullWidthFlexScretch} ${classes.align}`} spacing={0}>
+                    {/* <Typography>{
+                        width
+                    }</Typography> */}
+                    {
+                        posts.sort((a, b) => { return (new Date(b.createdAt) - new Date(a.createdAt)) }).map((post) =>
+                        (<Grid ref={tempRef} key={`${post._id}qiwozzzaiaksi`} item className={`${classes.flex} ${classes.hi}`} xs={6} md={4} lg={3} >
+                                <img
+                                    className={classes.media2}
+                                    src={httpToHTTPS(post.selectedFile, 4, 's')}
+                                    title={post.title}
+                                    alt={post.title}
+                                />
+                            </Grid>
+                        ))
+                    }
+                </Grid>
+            }
         </Grid>
     }
 

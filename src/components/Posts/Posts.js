@@ -53,7 +53,7 @@ const Posts = ({ setCurrentId, setLinear, searchKey }) => {
                             return isAllMatch;
 
                         }).sort((a, b) => { return (new Date(b.createdAt) - new Date(a.createdAt)) }).map((post) => (
-                            <Grid key={post._id} item xs={12} sm={12} md={6}>
+                            <Grid key={post._id} item xs={12} md={12} sm={12} lg={12}>
                                 <Post post={post} setCurrentId={setCurrentId} setLinear={setLinear} />
                             </Grid>
                         ))}
@@ -62,7 +62,7 @@ const Posts = ({ setCurrentId, setLinear, searchKey }) => {
         ) : (
             <>
                 <Grid className={classes.container} container alignItems="stretch" spacing={3}>
-                    <Grid key={'123456'} item xs={12} sm={12} md={6}>
+                    <Grid key={'123456'} item xs={12} md={12} sm={12} lg={12}>
                         <Post post={
                             {
                                 tags: ['TodayMood'],

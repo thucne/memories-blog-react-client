@@ -32,6 +32,15 @@ export default makeStyles((theme) => ({
         height: '100%',
         padding: 0
     },
+    fullWidthFlexStretch3: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        padding: 0
+    },
     flex: {
         display: 'flex',
         alignItems: 'center',
@@ -138,4 +147,27 @@ export default makeStyles((theme) => ({
     media: {
         height: 190,
     },
+    media2: {
+        height: '100%',
+        width: 'auto',
+        postion: 'relative',
+    },
+    hi: {
+        overflow: 'hidden', height: '312px', width: '100%', position: 'relative', borderRadius: '4px',
+        '&:hover': {
+            filter: 'brightness(30%)',
+          }
+        // boxShadow: '0px 3px 2px 2px rgba(226, 226, 226, 0.3)',
+    },
+    [theme.breakpoints.down('md')]: {
+        hi: {
+            height: '330px',
+        }
+    },
+
+    [theme.breakpoints.down('xs')]: {
+        hi: {
+            height: '139px',
+        }
+    }
 }));

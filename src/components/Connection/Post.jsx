@@ -83,7 +83,7 @@ const Post = ({ post }) => {
             <CardMedia
                 className={classes.media}
                 image={httpToHTTPS(post.selectedFile, 4, 's')}
-                title="Paella dish"
+                title={post.title}
             />
             <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">

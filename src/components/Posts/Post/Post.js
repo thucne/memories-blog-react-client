@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardActions, CardContent, CardMedia, Button, Typography, Tooltip, Avatar, Grid, Slide, TextField, Badge } from '@material-ui/core';
+import { Card, CardActions, CardContent, CardMedia, Button, Typography, Tooltip, Avatar, Grid, Slide, TextField, Badge, Menu } from '@material-ui/core';
 // import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 
 import Comment from './Comment';
@@ -7,7 +7,14 @@ import Comment from './Comment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 // import AssignmentIcon from '@material-ui/icons/Assignment';
-
+// import Select from '@material-ui/core/Select';
+// import InputLabel from '@material-ui/core/InputLabel';
+// import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import PublicIcon from '@material-ui/icons/Public';
+import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
+import CenterFocusWeakIcon from '@material-ui/icons/CenterFocusWeak';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import moment from 'moment';
 import useStyles from './styles';
 import { useDispatch } from 'react-redux';
@@ -32,6 +39,7 @@ import TuneIcon from '@material-ui/icons/Tune';
 import { postComment, editComment } from '../../../actions/posts';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import FacebookProgress from '../../Connection/FacebookProgress';
+import { updatePost } from '../../../actions/posts';
 
 import Wall from '../../Connection/Wall';
 
@@ -58,6 +66,22 @@ const Post = ({ post, setCurrentId, setLinear }) => {
     const [isPostingComment, setIsPostingComment] = useState(false);
 
     const [openWall, setOpenWall] = useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const getIcon = (visibility) => {
+        switch (visibility) {
+            case 'public':
+                return <PublicIcon />
+            case 'followers':
+                return <SubscriptionsIcon />
+            case 'oops':
+                return <CenterFocusWeakIcon />
+            default:
+                return <VisibilityOffIcon />
+        }
+    }
+
+    const [icon, setIcon] = useState(post.visibility ? getIcon(post.visibility) : <PublicIcon />);
 
     const cmts = useSelector(state => {
         return Array.isArray(state.cmts) ? state.cmts.filter((cmt) => cmt.postId === post._id) : []
@@ -210,6 +234,39 @@ const Post = ({ post, setCurrentId, setLinear }) => {
         />;
     };
 
+    // const handleClick2 = (event) => {
+    //     setAnchorEl(event.currentTarget);
+    // };
+
+    const handleVisibility = (value) => {
+        dispatch(updatePost(post._id, { visibility: value })).then(() => {
+            switch (value) {
+                case 'public':
+                    setIcon(<PublicIcon />)
+                    break;
+                case 'followers':
+                    setIcon(<SubscriptionsIcon />);
+                    break;
+                case 'oops':
+                    setIcon(<CenterFocusWeakIcon />);
+                    break;
+                default:
+                    setIcon(<VisibilityOffIcon />)
+            }
+            handleClose();
+        }).catch(() => {
+            handleClose();
+        });
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleClick2 = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
     return (
         <>
             {
@@ -228,7 +285,7 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                 showUserAvt && <FullImage open={showUserAvt} setOpen={setShowUserAvt} img={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt} />
             }
             {
-                openWall && <Wall id={post.creator} open={openWall} setOpen={setOpenWall} userId={user._id}/>
+                openWall && <Wall id={post.creator} open={openWall} setOpen={setOpenWall} userId={user._id} />
             }
             <Card ref={myToBeSharedCard} className={post.oops ? `${classes.card} ${classes.cardOops}` : `${classes.card} ${classes.cardNotOops}`}>
                 <div onClick={handleMouseHover}>
@@ -277,7 +334,6 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                             ) : ''
                         ) : ''}
                     </Typography>
-
                 </div>
                 {
                     (user?.result?.googleId === post?.creator || user?.result?._id === post?.creator || user?.result?.ggId === post?.creator) && (
@@ -296,6 +352,29 @@ const Post = ({ post, setCurrentId, setLinear }) => {
                                 <ShareIcon />
                             </Button>
                         </div>
+                        {
+                            (user?.result?.googleId === post?.creator || user?.result?._id === post?.creator || user?.result?.ggId === post?.creator) &&
+                            <div className={classes.overlay5}>
+                                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick2} style={{ color: 'lightgray' }} >
+                                    {icon}
+                                </Button>
+                                <Menu
+                                    id={`custom${post._id}${Date.now()}`}
+                                    anchorEl={anchorEl}
+                                    keepMounted
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleClose}
+                                >
+                                    <MenuItem onClick={() => handleVisibility('public')} value={'public'} ><Button classes={{ root: classes.disableRipple }} startIcon={<PublicIcon />}>Public</Button></MenuItem>
+                                    <MenuItem onClick={() => handleVisibility('followers')} value={'followers'}><Button classes={{ root: classes.disableRipple }} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
+                                    {
+                                        (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
+                                        && <MenuItem onClick={() => handleVisibility('oops')} value={'oops'}><Button classes={{ root: classes.disableRipple }} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
+                                    }
+                                    <MenuItem onClick={() => handleVisibility('onlyMe')} value={'onlyMe'}><Button classes={{ root: classes.disableRipple }} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>
+                                </Menu>
+                            </div>
+                        }
                         <div className={classes.overlay4}>
                             <Button style={{ color: 'pink' }} size="small" onClick={showComments}>
                                 <Badge badgeContent={cmts.length} color="primary" classes={{ badge: classes.myBadge }}>

@@ -16,6 +16,9 @@ import PublicIcon from '@material-ui/icons/Public';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import CenterFocusWeakIcon from '@material-ui/icons/CenterFocusWeak';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import { getPosts } from '../../actions/posts';
+
+import Dialog from '@material-ui/core/Dialog';
 
 const pushNoti = (title, subtitle, message) => {
     addNotification({
@@ -35,7 +38,7 @@ const pushNoti = (title, subtitle, message) => {
                InputProps={{ style: { display: 'none' } }}
                onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />
        </div> */
-const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
+const Form = ({ currentId, setCurrentId, setLinear, setIsLoad, open2, setOpen2 }) => {
     const user = JSON.parse(localStorage.getItem('profile'));
 
     const [postData, setPostData] = useState({ title: '', message: '', tags: '', selectedFile: '', creatorAvt: (user?.result?.imageUrl || user?.result?.avt || ''), visibility: 'public' });
@@ -92,6 +95,7 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
                     setSnackType('success');
                     pushNoti('Succesfully', 'You have just updated a MEmory!', 'What a wonderful day!');
                     clear();
+                    getPosts();
                 }).catch((error) => {
                     setProgress(false);
                     setLinear(false);
@@ -154,59 +158,119 @@ const Form = ({ currentId, setCurrentId, setLinear, setIsLoad }) => {
         })
     }
 
-    return (
-        <Paper className={classes.paper}>
-            {
-                open && <FormSnackBar open={open} setOpen={setOpen} message={snackMSG} setMessage={setSnackMSG} type={snackType} setType={setSnackType} />
-            }
-            {
-                progress ? <CircularProgress /> : (
-                    <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-                        <Typography variant="h6">{currentId ? 'Editing' : 'Creating '} a Memory</Typography>
-                        {/* <TextField name="creatorAvt" required type="hidden" variant="outlined" label="Title" fullWidth style={{display: 'none'}} value={user?.result?.imageUrl} onChange={(e) => setPostData({ ...postData, creatorAvt: e.target.value })} /> */}
-                        <TextField name="title" required variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
-                        <TextField name="message" required variant="outlined" label="Message" fullWidth multiline rows={4} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
-                        <TextField name="tags" required variant="outlined" label="Tags (comma separated)" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })} />
-                        <TextField
-                            id="originalFileName2"
-                            type="file"
-                            inputProps={{ accept: 'image/*' }}
-                            InputLabelProps={{ shrink: true, color: "primary" }}
-                            label="Cover photo"
-                            name="originalFileName"
-                            onChange={handleFileRead}
-                            size="small"
-                            variant="outlined"
-                            required={currentId === 0}
-                            fullWidth
-                        />
-                        <FormControl variant="outlined" className={classes.formControl}  required>
-                            <InputLabel htmlFor="outlined-age-native-simple">Visibility</InputLabel>
-                            <Select
-                                value={postData.visibility}
-                                onChange={(e) => setPostData({ ...postData, visibility: e.target.value })}
-                                label="Visibility"
-                                inputProps={{
-                                    name: 'age',
-                                    id: 'outlined-age-native-simple',
-                                }}
-                                classes={{root : classes.myOverride}}
-                            >
-                                <MenuItem value={'public'} ><Button classes={{root: classes.disableRipple}} startIcon={<PublicIcon  />}>Public</Button></MenuItem>
-                                <MenuItem value={'followers'}><Button classes={{root: classes.disableRipple}} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
-                                {
-                                    (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
-                                    && <MenuItem value={'oops'}><Button classes={{root: classes.disableRipple}} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
-                                }
-                                <MenuItem value={'onlyMe'}><Button classes={{root: classes.disableRipple}} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>
-                            </Select>
-                        </FormControl>
-                        <Button startIcon={<CloudUploadIcon />} className={`${classes.buttonSubmit} ${classes.uploadMemory}`} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                        <Button className={classes.clearMemory} variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
-                    </form>
-                )
-            }
-        </Paper>
+    const handleClose2 = () => {
+        if (setOpen2) setOpen2(false);
+    }
+
+    return (<>
+        {
+            !(open2 && setOpen2) ? <Paper className={classes.paper}>
+                {
+                    open && <FormSnackBar open={open} setOpen={setOpen} message={snackMSG} setMessage={setSnackMSG} type={snackType} setType={setSnackType} />
+                }
+                {
+                    progress ? <CircularProgress /> : (
+                        <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+                            <Typography variant="h6">{currentId ? 'Editing' : 'Creating '} a Memory</Typography>
+                            {/* <TextField name="creatorAvt" required type="hidden" variant="outlined" label="Title" fullWidth style={{display: 'none'}} value={user?.result?.imageUrl} onChange={(e) => setPostData({ ...postData, creatorAvt: e.target.value })} /> */}
+                            <TextField name="title" required variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
+                            <TextField name="message" required variant="outlined" label="Message" fullWidth multiline rows={4} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
+                            <TextField name="tags" required variant="outlined" label="Tags (comma separated)" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })} />
+                            <TextField
+                                id="originalFileName2"
+                                type="file"
+                                inputProps={{ accept: 'image/*' }}
+                                InputLabelProps={{ shrink: true, color: "primary" }}
+                                label="Cover photo"
+                                name="originalFileName"
+                                onChange={handleFileRead}
+                                size="small"
+                                variant="outlined"
+                                required={currentId === 0}
+                                fullWidth
+                            />
+                            <FormControl variant="outlined" className={classes.formControl} required>
+                                <InputLabel htmlFor={`outlined-age-native${currentId}${Date.now()}`}>Visibility</InputLabel>
+                                <Select
+                                    value={postData.visibility}
+                                    onChange={(e) => setPostData({ ...postData, visibility: e.target.value })}
+                                    label="Visibility"
+                                    inputProps={{
+                                        name: 'age',
+                                        id: `outlined-age-native${currentId}${Date.now()}`,
+                                    }}
+                                    classes={{ root: classes.myOverride }}
+                                >
+                                    <MenuItem value={'public'} ><Button classes={{ root: classes.disableRipple }} startIcon={<PublicIcon />}>Public</Button></MenuItem>
+                                    <MenuItem value={'followers'}><Button classes={{ root: classes.disableRipple }} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
+                                    {
+                                        (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
+                                        && <MenuItem value={'oops'}><Button classes={{ root: classes.disableRipple }} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
+                                    }
+                                    <MenuItem value={'onlyMe'}><Button classes={{ root: classes.disableRipple }} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>
+                                </Select>
+                            </FormControl>
+                            <Button startIcon={<CloudUploadIcon />} className={`${classes.buttonSubmit} ${classes.uploadMemory}`} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                            <Button className={classes.clearMemory} variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
+                        </form>
+                    )
+                }
+            </Paper> : <Dialog onClose={handleClose2} aria-labelledby="simple-dialog-title" open={open2}>
+                <Paper className={classes.paper}>
+                    {
+                        open && <FormSnackBar open={open} setOpen={setOpen} message={snackMSG} setMessage={setSnackMSG} type={snackType} setType={setSnackType} />
+                    }
+                    {
+                        progress ? <CircularProgress /> : (
+                            <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+                                <Typography variant="h6">{currentId ? 'Editing' : 'Creating '} a Memory</Typography>
+                                {/* <TextField name="creatorAvt" required type="hidden" variant="outlined" label="Title" fullWidth style={{display: 'none'}} value={user?.result?.imageUrl} onChange={(e) => setPostData({ ...postData, creatorAvt: e.target.value })} /> */}
+                                <TextField name="title" required variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
+                                <TextField name="message" required variant="outlined" label="Message" fullWidth multiline rows={4} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
+                                <TextField name="tags" required variant="outlined" label="Tags (comma separated)" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })} />
+                                <TextField
+                                    id="originalFileName2"
+                                    type="file"
+                                    inputProps={{ accept: 'image/*' }}
+                                    InputLabelProps={{ shrink: true, color: "primary" }}
+                                    label="Cover photo"
+                                    name="originalFileName"
+                                    onChange={handleFileRead}
+                                    size="small"
+                                    variant="outlined"
+                                    required={currentId === 0}
+                                    fullWidth
+                                />
+                                <FormControl variant="outlined" className={classes.formControl} required>
+                                    <InputLabel htmlFor={`outlined-age-native${currentId}${Date.now()}`}>Visibility</InputLabel>
+                                    <Select
+                                        value={postData.visibility}
+                                        onChange={(e) => setPostData({ ...postData, visibility: e.target.value })}
+                                        label="Visibility"
+                                        inputProps={{
+                                            name: 'age',
+                                            id: `outlined-age-native${currentId}${Date.now()}`,
+                                        }}
+                                        classes={{ root: classes.myOverride }}
+                                    >
+                                        <MenuItem value={'public'} ><Button classes={{ root: classes.disableRipple }} startIcon={<PublicIcon />}>Public</Button></MenuItem>
+                                        <MenuItem value={'followers'}><Button classes={{ root: classes.disableRipple }} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
+                                        {
+                                            (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
+                                            && <MenuItem value={'oops'}><Button classes={{ root: classes.disableRipple }} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
+                                        }
+                                        <MenuItem value={'onlyMe'}><Button classes={{ root: classes.disableRipple }} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <Button startIcon={<CloudUploadIcon />} className={`${classes.buttonSubmit} ${classes.uploadMemory}`} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                                <Button className={classes.clearMemory} variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
+                            </form>
+                        )
+                    }
+                </Paper>
+            </Dialog>
+        }
+    </>
     );
 }
 

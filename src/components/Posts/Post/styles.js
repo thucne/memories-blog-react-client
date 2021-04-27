@@ -55,20 +55,25 @@ export default makeStyles((theme) => ({
   overlay2: {
     position: 'absolute',
     top: '20px',
-    right: '20px',
+    right: '10px',
     color: 'white',
   },
   overlay3: {
     position: 'absolute',
-    top: '135px',
+    top: '300px',
     left: '-5px',
     color: 'white',
   },
   overlay4: {
     position: 'absolute',
-    top: '135px',
+    top: '300px',
     right: '-5px',
     color: 'white',
+  },
+  overlay5: {
+    position: 'absolute',
+    top: '300px',
+    left: '280px',
   },
   myLabel: {
     borderRadius: '15px'
@@ -81,17 +86,39 @@ export default makeStyles((theme) => ({
     overlay4: {
       top: '300px',
       right: '-5px',
-    }
+    },
+    overlay5: {
+      top: '300px',
+      left: '270px',
+    },
   },
   [theme.breakpoints.down('sm')]: {
     overlay3: {
-      top: '120px',
+      top: '300px',
       left: '-5px',
     },
     overlay4: {
-      top: '120px',
+      top: '300px',
       right: '-5px',
-    }
+    },
+    overlay5: {
+      top: '300px',
+      left: '260px',
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    overlay3: {
+      top: '140px',
+      left: '-5px',
+    },
+    overlay4: {
+      top: '140px',
+      right: '-5px',
+    },
+    overlay5: {
+      top: '140px',
+      left: '135px',
+    },
   },
   grid: {
     display: 'flex',
@@ -182,6 +209,26 @@ export default makeStyles((theme) => ({
       boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
       color: 'white',
       border: 'none'
+    }
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    // minWidth: 120,
+    width: '100%',
+    height: '100%',
+  },
+  myOverride: {
+    height: 'fit-content',
+    padding: '5px 5px 5px 10px',
+  },
+  disableRipple: {
+    '&:hover': {
+      background: 'none !important',
+      opacity: 1
+    },
+    "& .MuiTouchRipple-root span": {
+      background: 'none !important',
+      opacity: 1
     }
   }
 }));
