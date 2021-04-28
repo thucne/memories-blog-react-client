@@ -66,7 +66,7 @@ const Home = (props) => {
                                 </Grid>
                             </Grid>
                             :
-                            <Grid containter spacing={0} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifiContent: 'center', alignItems: 'center', padding: '10px', backgroundColor: 'lightgray', borderRadius: '8px', margin: '5px 10px 5px 10px' }}>
+                            <Grid container spacing={0} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifiContent: 'center', alignItems: 'center', padding: '10px', backgroundColor: 'lightgray', borderRadius: '8px', margin: '5px 10px 5px 10px' }}>
                                 <Typography>Hello, Welcome to MEmories!</Typography>
                             </Grid>
                     }

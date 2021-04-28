@@ -81,9 +81,9 @@ const App = () => {
     }, [dispatch]);
 
     const See = () => {
-        let {id} = useParams();
+        let { id } = useParams();
 
-        return <h3 style={{fontSize: '100px'}}>Requested topic ID: {id}</h3>;
+        return <h3 style={{ fontSize: '100px' }}>Requested topic ID: {id}</h3>;
     }
 
     return (
@@ -101,7 +101,7 @@ const App = () => {
                                     <AlertTitle>You have forcibly reloaded the page!</AlertTitle>
                                     You have reloaded the page, although the login is not complete.
                                     Therefore, you have failed login! If you still want to continue,
-                                    try completing the steps.<br /><br /><strong>MEmories Team. [Click away or automatically closed in: {Math.round(closedIn/1000)} seconds]</strong>
+                                    try completing the steps.<br /><br /><strong>MEmories Team. [Click away or automatically closed in: {Math.round(closedIn / 1000)} seconds]</strong>
                                 </Alert>
                             </div>
                         </Container>
@@ -109,15 +109,16 @@ const App = () => {
                     </Dialog>
                     : (
                         <>
+                            <NewNavBar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey} />
+
                             {
-                                linear && <div className={classes.linearProgress} style={{ position: 'fixed', top: '0', zIndex: '1000' }}>
-                                    <LinearProgress color="secondary" />
+                                linear && <div className={classes.linearProgress} style={{ position: 'fixed', top: 0, zIndex: '100000' }}>
+                                    <LinearProgress color="secondary" classes={{colorSecondary: classes.customColor, barColorSecondary: classes.customColor2}}/>
                                 </div>
                             }
                             <Notifications />
                             <Container maxWidth="lg">
                                 {/* <Navbar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey} /> */}
-                                <NewNavBar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey}/>
                                 <Switch>
                                     <Route path="/" exact render={props => <Home {...props} setLinear={setLinear} setIsInfo={setIsInfo(false)} setSearchKey={setSearchKey} searchKey={searchKey} />} />
                                     <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} />} />

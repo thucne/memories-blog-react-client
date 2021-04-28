@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useStyles from './styles';
@@ -42,7 +42,6 @@ const httpToHTTPS = (str, from, what) => {
 const Wall = ({ id, open, setOpen, userId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const tempRef = useRef();
     const wall = useSelector((state) => state.wall.wall);
     const rawPosts = useSelector((state) => state.posts);
 
@@ -276,7 +275,7 @@ const Wall = ({ id, open, setOpen, userId }) => {
                     }</Typography> */}
                     {
                         posts.sort((a, b) => { return (new Date(b.createdAt) - new Date(a.createdAt)) }).map((post) =>
-                        (<Grid ref={tempRef} key={`${post._id}qiwozzzaiaksi`} item className={`${classes.flex} ${classes.hi}`} xs={6} md={4} lg={3} >
+                        (<Grid key={`${post._id}qiwozzzaiaksi`} item className={`${classes.flex} ${classes.hi}`} xs={6} md={4} lg={3} >
                                 <img
                                     className={classes.media2}
                                     src={httpToHTTPS(post.selectedFile, 4, 's')}

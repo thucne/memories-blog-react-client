@@ -70,7 +70,7 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
             default:
                 dispatch({ type: 'LOGOUT' });
                 setUser(null);
-                setIsChat(false);
+                // setIsChat(false);
                 history.push('/');
                 break;
         }
@@ -107,7 +107,7 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
             </List>
             <Divider />
             <List>
-                {['Home page', 'Personal information', 'Chat', 'Invite', 'Log out'].map((text, index) => (
+                {['Home page', 'Profile', 'Chat', 'Invite', 'Log out'].map((text, index) => (
                     <ListItem button key={text} onClick={handleAction1(index)}>
                         <ListItemIcon>
                             {(index === 0) && <HomeOutlinedIcon />}
@@ -140,8 +140,8 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
                 <HtmlTooltip
                     title={
                         <React.Fragment>
-                            <Typography color="inherit">Property of Katyperrycbt (Tran Trong Thuc)</Typography>
-                            {'This website is owned by Katyperrycbt (Tran Trong Thuc)'} <b>KATYPERRYCBT</b>
+                            <Typography color="inherit">Property of Katyperrycbt</Typography>
+                            {'This website is owned by Katyperrycbt (Tran Trong Thuc)'}
                         </React.Fragment>
                     }
                 >
@@ -152,7 +152,7 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
     );
 
     return (
-        <div>
+        <div style={{padding: 0, margin: 0, display: sideMenu ? '' : 'none'}}>
             <React.Fragment key='left'>
                 <SwipeableDrawer
                     anchor={'left'}

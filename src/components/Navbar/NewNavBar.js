@@ -17,10 +17,10 @@ import NewSideMenu from './NewSideMenu';
 
 //old
 import { useHistory } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { Avatar } from '@material-ui/core';
+import { Avatar, Button } from '@material-ui/core';
 import memories from '../../images/photo.png';
 import decode from 'jwt-decode';
 
@@ -73,7 +73,7 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
         () => {
             dispatch({ type: 'LOGOUT' });
             setUser(null);
-            setIsChat(false);
+            // setIsChat(false);
             // window.location.reload();
             history.push('/');
         }, [dispatch, history]
@@ -117,9 +117,10 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}
+            style={{padding: 0, margin: 0, display: isMenuOpen ? '' : 'none'}}
         >
-            <MenuItem onClick={() => { if (!isInfo) { setIsInfo(true); handleMenuClose(); return history.push('/info') }; if (isInfo) { handleMenuClose(); return history.push('/') } }}>Profile</MenuItem>
-            <MenuItem onClick={logout}>Log out</MenuItem>
+            <MenuItem component={Link} to={isInfo ? '/' : '/info'} onClick={() => { if (!isInfo) { setIsInfo(true); handleMenuClose(); return; }; if (isInfo) { setIsInfo(false); handleMenuClose(); return; } }}>{isInfo ? 'Back' : 'Profile'}</MenuItem>
+            <MenuItem component={Link} to='/' onClick={() => { handleMenuClose(); logout(); }}>Log out</MenuItem>
         </Menu>
     );
 
@@ -133,71 +134,72 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
+            style={{padding: 0, margin: 0, display: isMobileMenuOpen ? '': 'none'}}
         >
             {
-                user ? (<>
-                    <MenuItem>
+                user ? (<div>
+                    <MenuItem onClick={() => {
+                        process.env.REACT_APP_THUC_KATY === user?.result?.email && setOpenNoti(true);
+                        handleMobileMenuClose();
+                    }}>
                         <Avatar
                             className={classes.purple}
                             alt={user.result.name}
                             src={user.result.imageUrl || httpToHTTPS(user.result.avt, 4, 's')}
-                            onClick={() => {
-                                process.env.REACT_APP_THUC_KATY === user?.result?.email && setOpenNoti(true);
-                            }}
                             style={{ border: process.env.REACT_APP_THUC_KATY === user?.result?.email && '5px solid #FFD700', cursor: process.env.REACT_APP_THUC_KATY === user?.result?.email && 'pointer' }}
                         >
                             {user.result.name.charAt(0)}
                         </Avatar>
                         <p>Avatar</p>
                     </MenuItem>
-                    <MenuItem>
-                        <IconButton color="inherit" onClick={() => setOpen(true)}>
+                    <MenuItem onClick={() => { setOpen(true); handleMobileMenuClose(); }}>
+                        <IconButton color="inherit">
                             <MailIcon />
                         </IconButton>
                         <p>Invite</p>
                     </MenuItem>
-                    <MenuItem>
-                        <IconButton color="inherit" onClick={() => { if (!isChat) { setIsChat(true); return history.push('/chat') }; if (isChat) history.push('/') }}>
+                    <MenuItem component={Link} to={isChat ? '/' : '/chat'} onClick={() => { if (!isChat) { setIsChat(true); handleMobileMenuClose(); return; }; if (isChat) { setIsChat(false); handleMobileMenuClose(); return; } }}>
+                        <IconButton color="inherit" >
                             <ChatIcon />
                         </IconButton>
-                        <p>Chat</p>
-                    </MenuItem>
+                        <p>{isChat ? 'Back' : 'Chat'}</p>
+                    </MenuItem >
                     {
                         !stateUser ? <Progress /> :
-                            <MenuItem>
-                                <IconButton color="inherit" onClick={() => dispatch(toggleSubcribe())}>
+                            <MenuItem onClick={() => { dispatch(toggleSubcribe()) }}>
+                                <IconButton color="inherit">
                                     {
                                         stateUser?.info?.subcribe ? <NotificationsActiveIcon /> : <NotificationsOffIcon />
                                     }
                                 </IconButton>
-                                <p>Mail subcription</p>
+                                <p>Mail subscription</p>
                             </MenuItem>
                     }
-                    <MenuItem>
-                        <IconButton color="inherit" onClick={() => { if (!isInfo) { setIsInfo(true); return history.push('/info') }; if (isInfo) history.push('/') }}>
+                    <MenuItem component={Link} to={isInfo ? '/' : '/info'} onClick={() => { if (!isInfo) { setIsInfo(true); handleMobileMenuClose(); return; }; if (isInfo) { setIsInfo(false); handleMobileMenuClose(); return; } }}>
+                        <IconButton color="inherit" >
                             <AccountCircle />
                         </IconButton>
-                        <p>Profile</p>
+                        <p>{isInfo ? 'Back' : 'Profile'}</p>
                     </MenuItem>
-                    <MenuItem>
-                        <IconButton color="inherit" onClick={logout}>
+                    <MenuItem component={Link} to='' onClick={() => { handleMobileMenuClose(); logout() }}>
+                        <IconButton color="inherit" >
                             <ExitToAppIcon />
                         </IconButton>
                         <p>Log out</p>
                     </MenuItem>
-                </>) : (<>
-                    <MenuItem>
-                        <IconButton color="inherit" onClick={() => history.push('/auth')}>
+                </div>) : (
+                    <MenuItem component={Link} to='/auth' onClick={() => { handleMobileMenuClose() }}>
+                        <IconButton color="inherit" >
                             <FingerprintIcon />
                         </IconButton>
                     </MenuItem>
-                </>)
+                )
             }
         </Menu>
     );
 
     return (
-        <div className={classes.grow}>
+        <div className={classes.grow} style={{padding: 0, margin: 0}}>
             {
                 open &&
                 <SendEmail
@@ -225,14 +227,14 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
                         <MenuIcon />
                     </IconButton>
 
-                    <Typography className={classes.title} variant="h6" noWrap>
+                    <Typography component={Link} to='/' className={classes.title} variant="h6" noWrap>
                         MEmories
                     </Typography>
 
 
-                    <div onClick={() => setOpenFull(true)}>
+                    <Button component={Link} to='/'>
                         <img className={classes.image} src={memories} alt="memories" />
-                    </div>
+                    </Button>
 
                     <Reload />
                     <Search setSearchKey={setSearchKey} />
@@ -256,7 +258,7 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
                                 <IconButton color="inherit" onClick={() => setOpen(true)}>
                                     <MailIcon />
                                 </IconButton>
-                                <IconButton color="inherit" onClick={() => { if (!isChat) { setIsChat(true); return history.push('/chat') }; if (isChat) history.push('/') }}>
+                                <IconButton component={Link} to={isChat ? '/' : '/chat'} color="inherit" onClick={() => { if (!isChat) { setIsChat(true); return; }; if (isChat) setIsChat(false); return; }}>
                                     <ChatIcon />
                                 </IconButton>
                                 {
@@ -290,7 +292,7 @@ const MainMenu = ({ isInfo, setIsInfo, setLinear, setSearchKey }) => {
                                 </IconButton>
                             </div>
                         </>) : (<>
-                            <IconButton color="inherit" onClick={() => history.push('/auth')}>
+                            <IconButton component={Link} to='/auth' color="inherit">
                                 <FingerprintIcon />
                             </IconButton>
                         </>)
