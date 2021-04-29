@@ -24,10 +24,17 @@ const Info = (props) => {
         setIsInfo(true);
     })
 
+    const httpToHTTPS = (str, from, what) => {
+        if (str) {
+            return str.substring(0, from) + what + str.substring(from);
+        }
+        return '';
+    }
+
     if (!user) { history.push('/auth') }
 
     return (
-        <Grow in style={{position: 'relative', marginTop: '90px'}}>
+        <Grow in style={{ position: 'relative', marginTop: '90px' }}>
             <Container>
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>
@@ -42,7 +49,7 @@ const Info = (props) => {
                             classes={{ badge: classes.badge }}
                             badgeContent={<MyButton setLinear={setLinear} />}
                         >
-                            <Avatar alt={user?.result?.name} src={user?.result?.imageUrl || user?.result?.avt || ''} className={`${classes.large} ${classes.mainAvt}`} />
+                            <Avatar alt={user?.result?.name} src={user?.result?.imageUrl || httpToHTTPS(user?.result?.avt, 4, 's') || ''} className={`${classes.large} ${classes.mainAvt}`} />
                         </Badge>
                     </Grid>
                     <Grid container item xs={12} sm={12} md={12} style={{ justifyContent: "center", display: 'flex', flexDirection: 'row' }}>
