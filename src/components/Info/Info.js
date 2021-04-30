@@ -40,14 +40,7 @@ const Info = (props) => {
             <Container>
                 <ReactTitle title='MEmories / Profile' />
                 <MetaTags>
-                    <meta name="title" content="MEmories" />
-                    <meta name="description"
-                        content="A place to post your MEmories!" />
-                    <meta property="og:url" content="https://www.oopsmemories.site/" />
-                    <meta property="og:title" content="MEmories for Facebook" />
-                    <meta property="og:description"
-                        content="A place to post your MEmories!" />
-                    <meta property="og:image"
+                    <meta id='metaid4' property="og:image"
                         content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
                 </MetaTags>
                 {

@@ -21,14 +21,7 @@ const CV = () => {
     return <Container maxWidth='md' style={{ position: 'relative', zIndex: '1000', marginTop: '100px', padding: 0 }}>
         <ReactTitle title="Katyperrycbt's CV" />
         <MetaTags>
-
-            <meta name="description"
-                content="Katyperrycbt's CV!" />
-            <meta property="og:url" content="https://www.oopsmemories.site/katyperrycbt" />
-            <meta property="og:title" content="Katyperrycbt's CV" />
-            <meta property="og:description"
-                content="Please review!" />
-            <meta property="og:image"
+            <meta id='metaid1' property="og:image"
                 content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
 
         </MetaTags>
