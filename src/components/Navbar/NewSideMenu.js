@@ -81,8 +81,10 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
     const handleAction2 = (e) => () => {
         switch (e) {
             case 0:
+                history.push('/katyperrycbt');
                 break;
             default:
+                history.push('/katyperrycbt');
                 break;
         }
         handleClose();

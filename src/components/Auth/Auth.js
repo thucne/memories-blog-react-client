@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container, CircularProgress, Tooltip, TextField } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
@@ -45,13 +45,6 @@ const Auth = (props) => {
     const [token, setToken] = useState('');
 
     const { setLinear } = props;
-
-    useEffect(() => {
-        window.onbeforeunload = () => {
-            alert('sdsds');
-            return true;
-        }
-    })
     // const recaptcha = useRef(null);
 
     const noti = useSelector((state) => {

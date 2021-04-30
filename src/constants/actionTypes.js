@@ -18,3 +18,5 @@ export const GET_NOTI = 'GET_NOTI';
 export const SET = 'SET';
 export const WALL = 'WALL';
 
+export const SET_META = 'SET_META'
+
