@@ -53,19 +53,15 @@ const Home = (props) => {
                 <ReactTitle title='MEmories / Home' />
                 <MetaTags>
                     <meta name="title" content="MEmories" />
-                    {/* <meta name="description"
+                    <meta name="description"
                         content="A place to post your MEmories!" />
                     <meta property="og:url" content="https://www.oopsmemories.site/" />
                     <meta property="og:title" content="MEmories for Facebook" />
                     <meta property="og:description"
                         content="A place to post your MEmories!" />
                     <meta property="og:image"
-                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1615297494/Web_capture_5-3-2021_145319_memories-thuckaty.netlify.app_hrcwg6.jpg" /> */}
-                    <meta name="description" content="Katyperrycbt's CV!" />
-                    <meta property="og:url" content="https://www.oopsmemories.site/katyperrycbt" />
-                    <meta property="og:title" content="Katyperrycbt's CV" />
-                    <meta property="og:description" content="Please review!" />
-                    <meta property="og:image" content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
+                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
+
                 </MetaTags>
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>

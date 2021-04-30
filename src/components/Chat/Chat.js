@@ -37,7 +37,7 @@ const Chat = (props) => {
                 <meta property="og:description"
                     content="A place to post your MEmories!" />
                 <meta property="og:image"
-                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1615297494/Web_capture_5-3-2021_145319_memories-thuckaty.netlify.app_hrcwg6.jpg" />
+                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
             </MetaTags>
             {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
