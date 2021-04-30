@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Container, Grid } from "@material-ui/core";
 import MetaTags from 'react-meta-tags';
+import { ReactTitle } from 'react-meta-tags';
+import { useHistory } from 'react-router-dom';
 
 const CV = () => {
     const [open, setOpen] = useState(false);
+    const history = useHistory();
+
+    const user = JSON.parse(localStorage.getItem('profile'));
+
+    if (!user) { history.push('/auth') }
 
     useEffect(() => {
         setTimeout(() => {
@@ -11,44 +18,25 @@ const CV = () => {
         }, 2000);
     })
 
-    return <Container maxWidth='md' style={{ position: 'relative', zIndex: '1000000000000000', marginTop: '100px', padding: 0 }}>
+    return <Container maxWidth='md' style={{ position: 'relative', zIndex: '1000', marginTop: '100px', padding: 0 }}>
+        <ReactTitle title="Katyperrycbt's CV" />
         <MetaTags>
-            <meta charset="utf-8" />
-            <link rel="icon" href="%PUBLIC_URL%/photos.favicon.ico" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <meta name="theme-color" content="#000000" />
 
-            <title>MEmories</title>
-            <meta name="title" content="MEmories by katyperrycbt" />
             <meta name="description"
-                content="A place to post your MEmories!" />
-
-            <meta property="og:type" content="website" />
-            <meta property="og:url" content="https://www.oopsmemories.site/" />
-            <meta property="og:title" content="MEmories for Facebook Custom" />
+                content="Katyperrycbt's CV!" />
+            <meta property="og:url" content="https://www.oopsmemories.site/katyperrycbt" />
+            <meta property="og:title" content="Katyperrycbt's CV" />
             <meta property="og:description"
-                content="A place to post your MEmories!" />
+                content="Please review!" />
             <meta property="og:image"
-                content="https://res.cloudinary.com/katyperrycbt/image/upload/v1615297494/Web_capture_5-3-2021_145319_memories-thuckaty.netlify.app_hrcwg6.jpg" />
-
-            <meta property="twitter:card" content="summary_large_image" />
-            <meta property="twitter:url" content="https://www.oopsmemories.site/" />
-            <meta property="twitter:title" content="MEmories for Twitter" />
-            <meta property="twitter:description"
-                content="A place to post your MEmories!" />
-            <meta property="twitter:image"
-                content="https://res.cloudinary.com/katyperrycbt/image/upload/v1615297494/Web_capture_5-3-2021_145319_memories-thuckaty.netlify.app_hrcwg6.jpg" />
-
-
-            <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-            <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+                content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
 
         </MetaTags>
         <Grid container spacing={3} alignItems='center' justify='center'>
             <Grid item xs={12}>
                 {
-                    !open ? <img src='cvv.gif' alt='cv' style={{ width: '100%', height: 'auto' }} />
-                        : <img src='cv.png' alt='cv' style={{ width: '100%', height: 'auto' }} />
+                    !open ? <img src='https://res.cloudinary.com/katyperrycbt/image/upload/v1619797119/ezgif.com-gif-maker_2_wqy4mk.gif' alt='cv' style={{ width: '100%', height: 'auto' }} />
+                        : <img src='https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png' alt='cv' style={{ width: '100%', height: 'auto' }} />
                 }
             </Grid>
         </Grid>

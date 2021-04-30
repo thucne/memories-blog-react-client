@@ -20,6 +20,8 @@ import ModalNotification from '../ModalNotification/ModalNotification';
 // import { ReCaptcha } from 'react-recaptcha-v3';
 import StepperCustom from './Stepper';
 import { checkEmail } from '../../actions/invite';
+import MetaTags from 'react-meta-tags';
+import { ReactTitle } from 'react-meta-tags';
 
 dotenv.config();
 
@@ -227,6 +229,18 @@ const Auth = (props) => {
 
     return (
         <Container component="main" maxWidth="xs">
+            <ReactTitle title='MEmories / Login' />
+            <MetaTags>
+                <meta name="title" content="MEmories" />
+                <meta name="description"
+                    content="A place to post your MEmories!" />
+                <meta property="og:url" content="https://www.oopsmemories.site/" />
+                <meta property="og:title" content="MEmories for Facebook" />
+                <meta property="og:description"
+                    content="A place to post your MEmories!" />
+                <meta property="og:image"
+                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1615297494/Web_capture_5-3-2021_145319_memories-thuckaty.netlify.app_hrcwg6.jpg" />
+            </MetaTags>
             {
                 <Snackbar open={(errors !== undefined || success !== undefined)} autoHideDuration={2000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={errors ? 'error' : 'success'}>
@@ -238,7 +252,7 @@ const Auth = (props) => {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
             }
             {
-                showStepper && <StepperCustom setSuccess={setSuccess} setErrors={setErrors}  setLinear={setLinear} activeStep={1} setDoneCreate={setDoneCreate} result={result} token={token} />
+                showStepper && <StepperCustom setSuccess={setSuccess} setErrors={setErrors} setLinear={setLinear} activeStep={1} setDoneCreate={setDoneCreate} result={result} token={token} />
             }
             <Paper className={classes.paper} elevation={3}>
                 {
