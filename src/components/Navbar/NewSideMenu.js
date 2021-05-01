@@ -44,6 +44,7 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
     const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
     const history = useHistory();
     const dispatch = useDispatch();
+    const user = JSON.parse(localStorage.getItem('profile'));
 
     const handleClose = (e) => {
         setSideMenu(false);
@@ -110,7 +111,7 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
             <Divider />
             <List>
                 {['Home page', 'Profile', 'Chat', 'Invite', 'Log out'].map((text, index) => (
-                    <ListItem button key={text} onClick={handleAction1(index)}>
+                    <ListItem button key={text} onClick={handleAction1(index)} disabled={user === null && text === 'Invite'}>
                         <ListItemIcon>
                             {(index === 0) && <HomeOutlinedIcon />}
                             {(index === 1) && <AccountCircleOutlinedIcon />}

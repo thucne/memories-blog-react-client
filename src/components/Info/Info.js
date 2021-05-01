@@ -33,15 +33,15 @@ const Info = (props) => {
         return '';
     }
 
-    if (!user) { history.push('/auth') }
+    if (!user) { history.push('/auth'); return <></> }
 
     return (
         <Grow in style={{ position: 'relative', marginTop: '90px' }}>
             <Container>
                 <ReactTitle title='MEmories / Profile' />
                 <MetaTags>
-                    <meta id='metaid4' property="og:image"
-                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
+                    {/* <meta id='metaid4' property="og:image"
+                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" /> */}
                 </MetaTags>
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>

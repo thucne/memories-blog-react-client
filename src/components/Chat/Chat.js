@@ -29,8 +29,8 @@ const Chat = (props) => {
         <div style={{position: 'relative', marginTop: '90px'}}>
             <ReactTitle title='MEmories / Chat' />
             <MetaTags>
-                <meta id='metaid5' property="og:image"
-                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
+                {/* <meta id='metaid5' property="og:image"
+                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" /> */}
             </MetaTags>
             {
                 noti.length ? <ModalNotification noti={noti} /> : <></>

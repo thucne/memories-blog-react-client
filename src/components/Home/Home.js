@@ -52,8 +52,8 @@ const Home = (props) => {
             <Container style={{ padding: 0 }} classes={{ root: classes.toggle }}>
                 <ReactTitle title='MEmories / Home' />
                 <MetaTags>
-                    <meta property="og:image"
-                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
+                    {/* <meta property="og:image"
+                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" /> */}
 
                 </MetaTags>
                 {

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* global google */
+import React, { useState, useEffect } from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container, CircularProgress, Tooltip, TextField } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
@@ -10,7 +11,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 import useStyles from './styles';
 import Input from './Input';
-import Icon from './icon';
+
 import { signin, signup } from '../../actions/auth';
 import dotenv from 'dotenv';
 
@@ -22,6 +23,10 @@ import StepperCustom from './Stepper';
 import { checkEmail } from '../../actions/invite';
 import MetaTags from 'react-meta-tags';
 import { ReactTitle } from 'react-meta-tags';
+
+import jwt_decode from 'jwt-decode';
+import { ReactComponent as Google } from './gg.svg';
+import { ReactComponent as MEmories } from './me.svg';
 
 dotenv.config();
 
@@ -45,9 +50,45 @@ const Auth = (props) => {
     const [doneCreate, setDoneCreate] = useState(false);
     const [result, setResult] = useState('');
     const [token, setToken] = useState('');
+    const [showGG, setShowGG] = useState(true);
+    const user = JSON.parse(localStorage.getItem('profile')) === null;
 
     const { setLinear } = props;
-    // const recaptcha = useRef(null);
+
+    useSelector((state) => state.auth).then((result) => { if (result.authData !== null) setShowGG(false) });
+
+    const handleCallBack = (res) => {
+        const decodedObject = jwt_decode(res.credential);
+
+        const prepare = {
+            tokenId: res.credential,
+            profileObj: {
+                email: decodedObject.email,
+                familyName: decodedObject.family_name,
+                givenName: decodedObject.given_name,
+                googleId: decodedObject.sub,
+                imageUrl: decodedObject.picture,
+                name: decodedObject.name
+            }
+        }
+
+        googleSuccess(prepare);
+        return;
+    }
+
+    useEffect(() => {
+        if (google !== undefined && showGG) {
+            google.accounts.id.initialize({
+                client_id: process.env.REACT_APP_GG_CLIENTID,
+                callback: handleCallBack
+            });
+            google.accounts.id.prompt(notification => {
+                if (notification.isNotDisplayed()) {
+                    console.log(notification.getNotDisplayedReason());
+                }
+            })
+        }
+    })
 
     const noti = useSelector((state) => {
         if (state.noti.noti.length) {
@@ -55,6 +96,11 @@ const Auth = (props) => {
         }
         return [];
     });
+
+    if (!user) {
+        history.push('/');
+        return <></>;
+    }
 
     const submitData = () => {
         if (isSignup) {
@@ -151,11 +197,12 @@ const Auth = (props) => {
     const googleSuccess = (res) => {
         const tempResult = res?.profileObj;
         const tempToken = res?.tokenId;
-
+        setShowGG(false);
         try {
             dispatch(checkEmail(tempResult.email)).then((result) => {
 
                 if (!result.message) {
+                    setSuccess({ message: 'Logged in succesfully!' });
                     dispatch({ type: 'AUTH', data: { result: tempResult, token: tempToken } });
                     setTimeout(() => {
                         setProgress(false);
@@ -163,7 +210,8 @@ const Auth = (props) => {
                             setLinear(false);
                         }
                         history.push('/');
-                    }, 1000);
+                        return <></>;
+                    }, 200);
                 } else {
                     tempResult.incomplete = false;
                     dispatch({ type: 'AUTH', data: { result: tempResult } });
@@ -186,6 +234,7 @@ const Auth = (props) => {
         } catch (error) {
             console.log(error);
         }
+        return <></>;
     }
 
 
@@ -231,8 +280,8 @@ const Auth = (props) => {
         <Container component="main" maxWidth="xs">
             <ReactTitle title='MEmories / Login' />
             <MetaTags>
-                <meta id='metaid2' property="og:image"
-                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
+                {/* <meta id='metaid2' property="og:image"
+                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" /> */}
             </MetaTags>
             {
                 <Snackbar open={(errors !== undefined || success !== undefined)} autoHideDuration={2000} onClose={handleClose}>
@@ -291,11 +340,20 @@ const Auth = (props) => {
                                         )
                                     }
                                 </Grid>
-                                <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                                <Button
+                                    type="submit"
+                                    className={classes.submit}
+                                    color="primary"
+                                    fullWidth
+                                    startIcon={<MEmories />}
+                                    variant="contained"
+                                >
                                     {
-                                        isSignup ? 'Sign up' : ' Sign in'
+                                        isSignup ? 'Sign up with MEmories' : ' Sign in with MEmories'
                                     }
                                 </Button>
+                                {/* <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                                </Button> */}
                                 <GoogleLogin
                                     clientId={process.env.REACT_APP_GG_CLIENTID}
                                     render={(renderProps) => (
@@ -305,10 +363,10 @@ const Auth = (props) => {
                                                 color="primary"
                                                 fullWidth
                                                 onClick={renderProps.onClick}
-                                                startIcon={<Icon />}
+                                                startIcon={<Google />}
                                                 variant="contained"
                                             >
-                                                Google
+                                                Sign in with Google
                                             </Button>
                                         </Tooltip>
                                     )}

@@ -18,7 +18,6 @@ import Dialog from '@material-ui/core/Dialog';
 import CV from './components/CV/CV';
 
 import useStyles from './styles';
-
 //sda
 const App = () => {
     const [linear, setLinear] = useState(false);
