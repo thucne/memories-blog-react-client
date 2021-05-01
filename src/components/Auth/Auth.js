@@ -21,7 +21,6 @@ import ModalNotification from '../ModalNotification/ModalNotification';
 // import { ReCaptcha } from 'react-recaptcha-v3';
 import StepperCustom from './Stepper';
 import { checkEmail } from '../../actions/invite';
-import { ReactTitle } from 'react-meta-tags';
 
 import jwt_decode from 'jwt-decode';
 import { ReactComponent as Google } from './gg.svg';
@@ -277,7 +276,6 @@ const Auth = (props) => {
 
     return (
         <Container component="main" maxWidth="xs">
-            <ReactTitle title='MEmories / Login' />
             {
                 <Snackbar open={(errors !== undefined || success !== undefined)} autoHideDuration={2000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={errors ? 'error' : 'success'}>

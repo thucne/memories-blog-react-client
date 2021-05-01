@@ -7,7 +7,6 @@ import MyButton from './MyButton';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ModalNotification from '../ModalNotification/ModalNotification';
-import { ReactTitle } from 'react-meta-tags';
 
 const Info = (props) => {
     const classes = useStyles();
@@ -37,7 +36,6 @@ const Info = (props) => {
     return (
         <Grow in style={{ position: 'relative', marginTop: '90px' }}>
             <Container>
-                <ReactTitle title='MEmories / Profile' />
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>
                 }

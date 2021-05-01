@@ -9,7 +9,6 @@ import { getAVTs } from '../../actions/getAVTs';
 import { getComments } from '../../actions/posts';
 import { getInfo } from '../../actions/user';
 import ModalNotification from '../ModalNotification/ModalNotification';
-import { ReactTitle } from 'react-meta-tags';
 
 import useStyles from './styles';
 
@@ -49,7 +48,6 @@ const Home = (props) => {
     return (
         <Grow in={true} style={{ position: 'relative', marginTop: '90px' }}>
             <Container style={{ padding: 0 }} classes={{ root: classes.toggle }}>
-                <ReactTitle title='MEmories / Home' />
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>
                 }

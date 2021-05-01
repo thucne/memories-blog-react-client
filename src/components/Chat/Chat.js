@@ -5,7 +5,6 @@ import ChatFeed from './ChatFeed';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ModalNotification from '../ModalNotification/ModalNotification';
-import {ReactTitle} from 'react-meta-tags';
 dotenv.config();
 
 
@@ -26,7 +25,6 @@ const Chat = (props) => {
 
     return (
         <div style={{position: 'relative', marginTop: '90px'}}>
-            <ReactTitle title='MEmories / Chat' />
             {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
             }
