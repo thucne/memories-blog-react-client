@@ -21,7 +21,6 @@ import ModalNotification from '../ModalNotification/ModalNotification';
 // import { ReCaptcha } from 'react-recaptcha-v3';
 import StepperCustom from './Stepper';
 import { checkEmail } from '../../actions/invite';
-import MetaTags from 'react-meta-tags';
 import { ReactTitle } from 'react-meta-tags';
 
 import jwt_decode from 'jwt-decode';
@@ -279,10 +278,6 @@ const Auth = (props) => {
     return (
         <Container component="main" maxWidth="xs">
             <ReactTitle title='MEmories / Login' />
-            <MetaTags>
-                {/* <meta id='metaid2' property="og:image"
-                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" /> */}
-            </MetaTags>
             {
                 <Snackbar open={(errors !== undefined || success !== undefined)} autoHideDuration={2000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={errors ? 'error' : 'success'}>

@@ -5,7 +5,6 @@ import ChatFeed from './ChatFeed';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ModalNotification from '../ModalNotification/ModalNotification';
-import MetaTags from 'react-meta-tags';
 import {ReactTitle} from 'react-meta-tags';
 dotenv.config();
 
@@ -28,10 +27,6 @@ const Chat = (props) => {
     return (
         <div style={{position: 'relative', marginTop: '90px'}}>
             <ReactTitle title='MEmories / Chat' />
-            <MetaTags>
-                {/* <meta id='metaid5' property="og:image"
-                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" /> */}
-            </MetaTags>
             {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
             }

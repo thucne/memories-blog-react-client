@@ -7,7 +7,6 @@ import MyButton from './MyButton';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ModalNotification from '../ModalNotification/ModalNotification';
-import MetaTags from 'react-meta-tags';
 import { ReactTitle } from 'react-meta-tags';
 
 const Info = (props) => {
@@ -39,10 +38,6 @@ const Info = (props) => {
         <Grow in style={{ position: 'relative', marginTop: '90px' }}>
             <Container>
                 <ReactTitle title='MEmories / Profile' />
-                <MetaTags>
-                    {/* <meta id='metaid4' property="og:image"
-                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" /> */}
-                </MetaTags>
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>
                 }
