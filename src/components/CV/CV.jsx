@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Container, Grid } from "@material-ui/core";
-import MetaTags from 'react-meta-tags';
-import { ReactTitle } from 'react-meta-tags';
 import { useHistory } from 'react-router-dom';
 
 const CV = () => {
@@ -19,12 +17,6 @@ const CV = () => {
     })
 
     return <Container maxWidth='md' style={{ position: 'relative', zIndex: '1000', marginTop: '100px', padding: 0 }}>
-        <ReactTitle title="Katyperrycbt's CV" />
-        <MetaTags>
-            <meta id='metaid1' property="og:image"
-                content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png" />
-
-        </MetaTags>
         <Grid container spacing={3} alignItems='center' justify='center'>
             <Grid item xs={12}>
                 {
