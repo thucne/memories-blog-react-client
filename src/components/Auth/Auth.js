@@ -50,6 +50,7 @@ const Auth = (props) => {
     const [token, setToken] = useState('');
     const [showGG, setShowGG] = useState(true);
     const user = JSON.parse(localStorage.getItem('profile')) === null;
+    const [ok, setOk] = useState(false);
 
     const { setLinear } = props;
 
@@ -75,7 +76,7 @@ const Auth = (props) => {
     }
 
     useEffect(() => {
-        if (google !== undefined && showGG) {
+        if (google !== undefined && showGG && !ok) {
             google.accounts.id.initialize({
                 client_id: process.env.REACT_APP_GG_CLIENTID,
                 callback: handleCallBack
@@ -196,20 +197,25 @@ const Auth = (props) => {
         const tempResult = res?.profileObj;
         const tempToken = res?.tokenId;
         setShowGG(false);
+        setOk(true);
+        setSuccess({ message: 'Welcome to MEmories!' });
+
         try {
             dispatch(checkEmail(tempResult.email)).then((result) => {
-
+                
                 if (!result.message) {
-                    setSuccess({ message: 'Logged in succesfully!' });
                     dispatch({ type: 'AUTH', data: { result: tempResult, token: tempToken } });
+                    setSuccess({ message: 'Logged in succesfully!' });
+
                     setTimeout(() => {
                         setProgress(false);
                         if (setLinear) {
                             setLinear(false);
                         }
                         history.push('/');
-                        return <></>;
+                        return <></>
                     }, 200);
+
                 } else {
                     tempResult.incomplete = false;
                     dispatch({ type: 'AUTH', data: { result: tempResult } });
@@ -232,6 +238,7 @@ const Auth = (props) => {
         } catch (error) {
             console.log(error);
         }
+        
         return <></>;
     }
 
