@@ -22,7 +22,7 @@ const CV = () => {
             <Grid item xs={12} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
                 {
                     !open ? <img src='https://res.cloudinary.com/katyperrycbt/image/upload/v1619797119/ezgif.com-gif-maker_2_wqy4mk.gif' alt='cv' style={{ width: '100%', height: 'auto' }} />
-                        : <iframe title='mycv' src="https://drive.google.com/file/d/1W5Kq6JjGqQZyV-aCGViJMIzdUQ54M8A0/preview" className={classes.pdf}></iframe>
+                        : <iframe title='mycv' src="https://drive.google.com/file/d/1UAPvtAsREI5Za2u_jPfJXckejaMTxFSr/preview" className={classes.pdf}></iframe>
 
                     // <img src='https://res.cloudinary.com/katyperrycbt/image/upload/v1619797100/CCV_kkl9lo.png' alt='cv' style={{ width: '100%', height: 'auto' }} />
                 }
