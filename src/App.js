@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@material-ui/core';
-import { BrowserRouter, Switch, Route, useParams } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Notifications } from 'react-push-notification';
 
@@ -17,7 +17,10 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 import Dialog from '@material-ui/core/Dialog';
 import CV from './components/CV/CV';
 
+import See from './components/See/See';
+
 import useStyles from './styles';
+
 //sda
 const App = () => {
     const [linear, setLinear] = useState(false);
@@ -78,11 +81,6 @@ const App = () => {
         dispatch(getNoti());
     }, [dispatch]);
 
-    const See = () => {
-        let { id } = useParams();
-
-        return <h3 style={{ fontSize: '100px' }}>Requested topic ID: {id}</h3>;
-    }
 
     return (
 

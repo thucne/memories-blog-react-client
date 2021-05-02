@@ -42,6 +42,7 @@ import FacebookProgress from '../../Connection/FacebookProgress';
 import { updatePost } from '../../../actions/posts';
 
 import Wall from '../../Connection/Wall';
+import { see } from '../../../actions/wall';
 
 const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
     const classes = useStyles();
@@ -307,7 +308,14 @@ const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
                                 <div onClick={() => setShowUserAvt(true)}><Avatar className={classes.avt} alt="Avt" src={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt}>
                                     {/* <AssignmentIcon style={{ color: 'green' }} /> */}
                                 </Avatar></div>
-                                <div onClick={() => setOpenWall(true)} style={{ cursor: 'pointer' }}>
+                                <div onClick={() => {
+                                    if (user) {
+                                        dispatch(see(post._id, user?.result?._id));
+                                    } else {
+                                        dispatch(see(post._id));
+                                    }
+                                    setOpenWall(true);
+                                }} style={{ cursor: 'pointer' }}>
                                     <Typography className={classes.username} variant="h6">
                                         {post.name}
                                     </Typography>
@@ -338,7 +346,7 @@ const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
                 {
                     (user?.result?.googleId === post?.creator || user?.result?._id === post?.creator || user?.result?.ggId === post?.creator) && (
                         <div className={classes.overlay2}>
-                            <Button style={{ color: 'white' }} size="small" onClick={() => {setCurrentId(post._id); if (setOpenForm) setOpenForm(true)}}>
+                            <Button style={{ color: 'white' }} size="small" onClick={() => { if (setCurrentId) setCurrentId(post._id); if (setOpenForm) setOpenForm(true) }}>
                                 <MoreHorizIcon fontSize="default" />
                             </Button>
                         </div>
@@ -374,7 +382,7 @@ const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
                                 <MenuItem onClick={() => handleVisibility('public')} value={'public'} ><Button classes={{ root: classes.disableRipple }} startIcon={<PublicIcon />}>Public</Button></MenuItem>
                                 <MenuItem onClick={() => handleVisibility('followers')} value={'followers'}><Button classes={{ root: classes.disableRipple }} startIcon={<SubscriptionsIcon />}>Followers</Button></MenuItem>
                                 {
-                                    (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1)
+                                    (process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?._id) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.ggId) > -1 || process.env.REACT_APP_OOPS.split(',').indexOf(user?.result?.googleId) > -1)
                                     && <MenuItem onClick={() => handleVisibility('oops')} value={'oops'}><Button classes={{ root: classes.disableRipple }} startIcon={<CenterFocusWeakIcon />}>Oops</Button></MenuItem>
                                 }
                                 <MenuItem onClick={() => handleVisibility('onlyMe')} value={'onlyMe'}><Button classes={{ root: classes.disableRipple }} startIcon={<VisibilityOffIcon />}>Only me</Button></MenuItem>

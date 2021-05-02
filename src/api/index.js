@@ -45,3 +45,8 @@ export const checkEmail = (email) => API.get(`/email/find/${email}`);
 
 export const getWall = (id) => API.get(`/wall/${id}`);
 export const toggleFollow = (id) => API.get(`/wall/toggleFollow/${id}`);
+
+const API2 = axios.create({ baseURL: process.env.REACT_APP_SERVER_URL});
+
+
+export const see = (postId, userId) => API2.get(`/wall/see/${postId}${userId ? `?userId=${userId}` : ''}`);

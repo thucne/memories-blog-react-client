@@ -19,4 +19,5 @@ export const SET = 'SET';
 export const WALL = 'WALL';
 
 export const SET_META = 'SET_META'
+export const SEE = 'SEE'
 

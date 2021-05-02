@@ -62,7 +62,8 @@ const Wall = ({ id, open, setOpen, userId }) => {
     const [tab, setTab] = useState(0);
     const [loading, setLoading] = useState(false);
     // const [width, setWidth] = useState(0);
-    const state = useSelector((state) => state.user.info.info.follow);
+
+    const state = useSelector((state) => {return state?.user?.info?.info?.follow ? state?.user?.info?.info?.follow: []});
 
     const followThisUser = state ? (state.indexOf(id) > -1) : false;
 
@@ -163,7 +164,7 @@ const Wall = ({ id, open, setOpen, userId }) => {
     const Node1 = () => {
         return <Grid className={classes.fullWidthFlexScretch} container spacing={2}>
             <Grid item className={classes.flex} xs={12}>
-                <Avatar src='photo.png' alt='img' className={classes.large} />
+                <Avatar src='/photo.png' alt='img' className={classes.large} />
                 {
                     loading ? <Skeleton width={250} /> : <Typography variant="h5">Seeing {wall?.info?.name}'s wall</Typography>
                 }

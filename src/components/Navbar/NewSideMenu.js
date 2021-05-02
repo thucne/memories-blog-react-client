@@ -106,7 +106,7 @@ export default function SwipeableTemporaryDrawer({ sideMenu, setSideMenu, setOpe
                 <Typography variant="subtitle1">
                     v4.27.2021
                 </Typography>
-                <img src='photo.png' alt='img' width={100} height={100} />
+                <img src='/photo.png' alt='img' width={100} height={100} />
             </List>
             <Divider />
             <List>
