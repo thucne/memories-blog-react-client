@@ -21,6 +21,7 @@ import FacebookProgress from './FacebookProgress';
 import { likePost } from '../../actions/posts';
 import { useDispatch } from 'react-redux';
 import {useHistory} from 'react-router-dom';
+import {see} from '../../actions/wall';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -100,7 +101,14 @@ const Post = ({ post }) => {
                             <FavoriteIcon style={{ color: post.likes.length > 0 ? (post.likes.find((like) => like === (user?.result?.googleId || user?.result?._id || user?.result?.ggId)) ? 'red' : '') : '' }} />
                         </IconButton>
                 }
-                <IconButton aria-label="share" onClick={()=>history.push(`/see/${post._id}`)}>
+                <IconButton aria-label="share" onClick={()=>{
+                    if (user) {
+                        dispatch(see(post._id, user?.result?._id));
+                    } else {
+                        dispatch(see(post._id));
+                    }
+                    history.push(`/see/${post._id}`);
+                    }}>
                     <ShareIcon />
                 </IconButton>
                 <IconButton

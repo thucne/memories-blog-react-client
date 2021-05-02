@@ -48,9 +48,11 @@ const Wall = ({ id, open, setOpen, userId }) => {
     let posts = [];
 
     if (!posts.length) {
-        if (rawPosts) {
-            for (let i = 0; i < rawPosts.length; i++) {
-                if (rawPosts[i]['creator'] === id) posts.push(rawPosts[i]);
+        if (id) {
+            if (rawPosts) {
+                for (let i = 0; i < rawPosts.length; i++) {
+                    if (rawPosts[i]['creator'] === id) posts.push(rawPosts[i]);
+                }
             }
         }
     }

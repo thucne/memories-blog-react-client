@@ -7,6 +7,7 @@ import MyButton from './MyButton';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ModalNotification from '../ModalNotification/ModalNotification';
+import MetaTags from 'react-meta-tags';
 
 const Info = (props) => {
     const classes = useStyles();
@@ -36,6 +37,19 @@ const Info = (props) => {
     return (
         <Grow in style={{ position: 'relative', marginTop: '90px' }}>
             <Container>
+            <MetaTags>
+                    <title id='thuc1'>MEmories</title>
+                    <meta id='thuc2' name="title" content="MEmories" />
+                    <meta id='thuc3' name="description" content="A small place for your MEmories!" />
+
+                    <meta id='thuc4' property="og:type" content="website" />
+                    <meta id='thuc5' property="og:url" content="https://oopsmemories.site/" />
+                    <meta id='thuc6' property="og:title" content="MEmories [Facebook version]" />
+                    <meta id='thuc7' property="og:description" content="A small place for your MEmories!" />
+                    <meta id='thuc8' property="og:image"
+                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619876083/178838090_426441418795355_3180472797909818372_n_gypmjd.png" />
+
+                </MetaTags>
                 {
                     noti.length ? <ModalNotification noti={noti} /> : <></>
                 }

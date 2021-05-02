@@ -42,7 +42,7 @@ function SimpleDialog(props) {
             <ListItemAvatar>
               <Avatar className={classes.avatar} src={email.avt} />
             </ListItemAvatar>
-            <ListItemText primary={email.email ? email.email : 'Google user (We will try to detect and show this kind of user as well!)'} />
+            <ListItemText primary={email.email ? email.email : 'MEmories\'s user'} />
           </ListItem>
         ))}
       </List>

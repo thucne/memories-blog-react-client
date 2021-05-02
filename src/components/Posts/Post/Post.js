@@ -42,7 +42,7 @@ import FacebookProgress from '../../Connection/FacebookProgress';
 import { updatePost } from '../../../actions/posts';
 
 import Wall from '../../Connection/Wall';
-import { see } from '../../../actions/wall';
+// import { see } from '../../../actions/wall';
 
 const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
     const classes = useStyles();
@@ -286,7 +286,7 @@ const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
                 showUserAvt && <FullImage open={showUserAvt} setOpen={setShowUserAvt} img={avts.filter((avt) => avt.id === post.creator).length > 0 ? httpToHTTPS(avts.filter((avt) => avt.id === post.creator)[0]?.avt, 4, 's') : post.creatorAvt} />
             }
             {
-                openWall && <Wall id={post.creator} open={openWall} setOpen={setOpenWall} userId={user._id} />
+                openWall && <Wall id={post.creator} open={openWall} setOpen={setOpenWall} userId={user ? user?.result?._id : ''} />
             }
             <Card ref={myToBeSharedCard} className={post.oops ? `${classes.card} ${classes.cardOops}` : `${classes.card} ${classes.cardNotOops}`}>
                 <div onClick={handleMouseHover}>
@@ -309,11 +309,6 @@ const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
                                     {/* <AssignmentIcon style={{ color: 'green' }} /> */}
                                 </Avatar></div>
                                 <div onClick={() => {
-                                    if (user) {
-                                        dispatch(see(post._id, user?.result?._id));
-                                    } else {
-                                        dispatch(see(post._id));
-                                    }
                                     setOpenWall(true);
                                 }} style={{ cursor: 'pointer' }}>
                                     <Typography className={classes.username} variant="h6">
@@ -365,7 +360,7 @@ const Post = ({ post, setCurrentId, setLinear, setOpenForm }) => {
                         <div className={classes.overlay5}>
                             <Tooltip title={post.visibility === 'public' ? `Public MEmories, everyone can see it.` : (
                                 post.visibility === 'followers' ? `Followers MEmories, you see it because you've followed this user.` : (
-                                    post.visibilityl === 'oops' ? `You are Oops! You see this ofc!` : `Only MEmory owner can read this MEmory`
+                                    post.visibility === 'oops' ? `You are Oops! You see this ofc!` : `Only MEmory owner can read this MEmory`
                                 )
                             )}>
                                 <Button aria-controls="simple-menu" aria-haspopup="true" onClick={(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator || user?.result?.ggId === post?.creator) ? handleClick2 : null} style={{ color: 'lightgray' }} >

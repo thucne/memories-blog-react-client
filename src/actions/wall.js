@@ -26,9 +26,10 @@ export const toggleFollow = (id) => async (dispatch) => {
 export const see = (postId, userId) => async (dispatch) => {
     try {
         const { data } = await api.see(postId, userId);
-        return dispatch({ type: SEE, data });
+        console.log(data);
+        dispatch({ type: SEE, data });
+        return data;
     } catch (error) {
         return { message: error.response.data.message };
-
     }
 }
