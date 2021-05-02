@@ -119,7 +119,7 @@ const App = () => {
                             <Container maxWidth="lg">
                                 {/* <Navbar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey} /> */}
                                 <Switch>
-                                    <Route path="/" exact render={props => <Home {...props} setLinear={setLinear} setIsInfo={setIsInfo(false)} setSearchKey={setSearchKey} searchKey={searchKey} />} />
+                                    <Route path="/" exact render={props => <Home   {...props} setLinear={setLinear} setIsInfo={setIsInfo(false)} setSearchKey={setSearchKey} searchKey={searchKey} />} />
                                     <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} />} />
                                     <Route path="/chat" exact render={props => <Chat {...props} setLinear={setLinear} />} />
                                     <Route path="/info" exact render={props => <Info {...props} setLinear={setLinear} setIsInfo={setIsInfo} setSearchKey={setSearchKey} searchKey={searchKey} />} />

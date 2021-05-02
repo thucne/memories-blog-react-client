@@ -23,7 +23,7 @@ export const signin = (formData, history) => async (dispatch) => {
         dispatch({ type: AUTH, data });
 
         return data;
-        // history.push('/');
+
     } catch (error) {
         dispatch({ type: AUTH, error: {message: error.response.data.message} });
 

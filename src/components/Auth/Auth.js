@@ -48,13 +48,13 @@ const Auth = (props) => {
     const [doneCreate, setDoneCreate] = useState(false);
     const [result, setResult] = useState('');
     const [token, setToken] = useState('');
-    const [showGG, setShowGG] = useState(true);
+    const [showGG, setShowGG] = useState(false);
     const user = JSON.parse(localStorage.getItem('profile')) === null;
     const [ok, setOk] = useState(false);
 
     const { setLinear } = props;
 
-    useSelector((state) => state.auth).then((result) => { if (result.authData !== null) setShowGG(false) });
+    useSelector((state) => state.auth).then((result) => { if (!result.authData) { setShowGG(true) } else { setShowGG(false) } });
 
     const handleCallBack = (res) => {
         const decodedObject = jwt_decode(res.credential);
@@ -75,18 +75,28 @@ const Auth = (props) => {
         return;
     }
 
+    const check = async () => {
+        if (!user) setShowGG(false);
+        if (user) setShowGG(true);
+    }
+
     useEffect(() => {
-        if (google !== undefined && showGG && !ok) {
-            google.accounts.id.initialize({
-                client_id: process.env.REACT_APP_GG_CLIENTID,
-                callback: handleCallBack
-            });
-            google.accounts.id.prompt(notification => {
-                if (notification.isNotDisplayed()) {
-                    console.log(notification.getNotDisplayedReason());
-                }
-            })
+        async function run() {
+            await check();
+            if (google !== undefined && showGG && !ok) {
+                google.accounts.id.initialize({
+                    client_id: process.env.REACT_APP_GG_CLIENTID,
+                    callback: handleCallBack
+                });
+                google.accounts.id.prompt(notification => {
+                    if (notification.isNotDisplayed()) {
+                        console.log(notification.getNotDisplayedReason());
+                    }
+                })
+            }
         }
+
+        run();
     })
 
     const noti = useSelector((state) => {
@@ -96,12 +106,11 @@ const Auth = (props) => {
         return [];
     });
 
-    if (!user) {
-        history.push('/');
-        return <></>;
-    }
-
     const submitData = () => {
+
+        setShowGG(false);
+        setOk(true);
+
         if (isSignup) {
             dispatch(signup(formData, history)).then((result) => {
 
@@ -121,7 +130,8 @@ const Auth = (props) => {
                             setLinear(false);
                         }
                         history.push('/');
-                    }, 1000);
+                        return <></>
+                    }, 200);
                 }
             }).catch((error) => {
                 console.log(error);
@@ -147,13 +157,14 @@ const Auth = (props) => {
                     setErrors(result);
                 } else {
                     setSuccess({ message: 'Log in successfully!' });
+                    // dispatch({ type: 'AUTH', data: result });
                     setTimeout(() => {
                         setProgress(false);
                         if (setLinear) {
                             setLinear(false);
                         }
                         history.push('/');
-                    }, 1000);
+                    }, 200);
                 }
             }).catch((error) => {
                 console.log(error);
@@ -174,9 +185,12 @@ const Auth = (props) => {
             setLinear(true);
         }
         setProgress(true);
-
+        setShowGG(false);
+        setOk(true);
         window.grecaptcha.ready(() => {
             window.grecaptcha.execute(process.env.REACT_APP_RECAPTCHA, { action: 'submit' }).then(token => {
+                setShowGG(false);
+                setOk(true);
                 submitData();
             });
         });
@@ -196,16 +210,17 @@ const Auth = (props) => {
     const googleSuccess = (res) => {
         const tempResult = res?.profileObj;
         const tempToken = res?.tokenId;
+
         setShowGG(false);
         setOk(true);
+
         setSuccess({ message: 'Welcome to MEmories!' });
 
         try {
             dispatch(checkEmail(tempResult.email)).then((result) => {
-                
+
                 if (!result.message) {
                     dispatch({ type: 'AUTH', data: { result: tempResult, token: tempToken } });
-                    setSuccess({ message: 'Logged in succesfully!' });
 
                     setTimeout(() => {
                         setProgress(false);
@@ -213,7 +228,6 @@ const Auth = (props) => {
                             setLinear(false);
                         }
                         history.push('/');
-                        return <></>
                     }, 200);
 
                 } else {
@@ -238,8 +252,7 @@ const Auth = (props) => {
         } catch (error) {
             console.log(error);
         }
-        
-        return <></>;
+
     }
 
 
