@@ -124,7 +124,6 @@ export const getComments = () => async (dispatch) => {
 export const starComment = (cmtId) => async (dispatch) => {
     try {
         const {data} = await api.starComment(cmtId);
-
         return dispatch({type: EDIT_CMT, data});
     } catch (error) {
         return { message: error.response.data.message };

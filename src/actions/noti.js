@@ -23,7 +23,7 @@ export const delNoti = (id) => async (dispatch) => {
 export const getNoti = () => async (dispatch) => {
     try {
         const {data} = await api.getNoti();
-        if (data) return dispatch({type: GET_NOTI, data});
+        if (data !== undefined) {return dispatch({type: GET_NOTI, data});}
         return dispatch({type:GET_NOTI, data: {}})
     } catch (error) {
         return { message: error.response.data.message };

@@ -16,12 +16,14 @@ import { useSelector } from 'react-redux';
 
 import { starComment } from '../../../actions/posts';
 import { delComment } from '../../../actions/posts';
+import FacebookProgress from '../../Connection/FacebookProgress';
 
 
 const Comment = ({ cmt, httpToHTTPS, setEdit, setLinear, setFormData, formData }) => {
     const classes = useStyles();
     const avts = useSelector((state) => state.getAVTs);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [star, setStar] = useState(false);
 
     const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem('profile'));
@@ -86,20 +88,23 @@ const Comment = ({ cmt, httpToHTTPS, setEdit, setLinear, setFormData, formData }
                     {cmt.modified && ` [modified]`}
                 </Typography>
                 <CardActions style={{ display: 'flex' }}>
-                    <Button size="small" onClick={() => dispatch(starComment(cmt._id))}>
-                        <FormControlLabel
-                            style={{ marginLeft: '20px' }}
-                            control={
-                                <Checkbox
-                                    icon={<GradeOutlinedIcon style={{ color: 'blue' }} fontSize="small" className={classes.star} />}
-                                    checkedIcon={<GradeIcon style={{ color: 'blue' }} fontSize="small" className={classes.star} />}
-                                    name="checkedI"
-                                    checked={cmt.hearts.find((heart) => heart === (user?.result?.googleId || user?.result?._id || user?.result?.ggId)) ? true : false}
-                                />
-                            }
+                    {
+                        star ? <FacebookProgress /> :
+                            <Button size="small" onClick={() => {setStar(true); dispatch(starComment(cmt._id)).then(() => setStar(false)).catch((err) => console.log(err.message));}} startIcon={
+                                <FormControlLabel
+                                    style={{ marginLeft: '20px' }}
+                                    control={
+                                        <Checkbox
+                                            icon={<GradeOutlinedIcon style={{ color: 'blue' }} fontSize="small" className={classes.star} />}
+                                            checkedIcon={<GradeIcon style={{ color: 'blue' }} fontSize="small" className={classes.star} />}
+                                            name="checkedI"
+                                            checked={cmt.hearts.find((heart) => heart === (user?.result?.googleId || user?.result?._id || user?.result?.ggId)) ? true : false}
+                                        />
+                                    }
 
-                        />
-                    </Button>
+                                />
+                            } />
+                    }
 
                     {
                         cmt.hearts.length > 0 ? (

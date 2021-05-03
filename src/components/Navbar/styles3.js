@@ -2,10 +2,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
     list: {
-        width: 250,
+        width: '100%',
     },
     fullList: {
-        width: 'auto',
+        width: '100',
     },
     [theme.breakpoints.down('xs')]: {
         mainGrid: {

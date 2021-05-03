@@ -129,6 +129,8 @@ const Auth = (props) => {
                     }
                 }, 1000);
                 setErrors(error);
+                localStorage.removeItem('tempSession');
+
             });
 
 
