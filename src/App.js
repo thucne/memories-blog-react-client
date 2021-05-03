@@ -12,15 +12,19 @@ import Chat from './components/Chat/Chat';
 import Info from './components/Info/Info';
 import { getNoti } from './actions/noti';
 import { useDispatch } from 'react-redux';
-import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import Dialog from '@material-ui/core/Dialog';
 import CV from './components/CV/CV';
 
 import See from './components/See/See';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import useStyles from './styles';
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 //sda
 const App = () => {
     const [linear, setLinear] = useState(false);
@@ -28,7 +32,8 @@ const App = () => {
     const [searchKey, setSearchKey] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [closedIn, setClosedIn] = useState(15000);
-
+    const [errors, setErrors] = useState(undefined);
+    const [success, setSuccess] = useState(undefined);
     const dispatch = useDispatch();
     const classes = useStyles();
     // let promises = '';
@@ -81,9 +86,24 @@ const App = () => {
         dispatch(getNoti());
     }, [dispatch]);
 
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setErrors(undefined);
+        setSuccess(undefined);
+    };
 
     return (
         <BrowserRouter>
+            {
+                <Snackbar open={(errors !== undefined || success !== undefined)} autoHideDuration={2000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity={errors ? 'error' : 'success'}>
+                        {errors?.message || success?.message}
+                    </Alert>
+                </Snackbar>
+            }
             {
                 showAlert ?
                     <Dialog onClose={() => {
@@ -117,7 +137,7 @@ const App = () => {
                                 {/* <Navbar setLinear={setLinear} setIsInfo={setIsInfo} isInfo={isInfo} setSearchKey={setSearchKey} /> */}
                                 <Switch>
                                     <Route path="/" exact render={props => <Home   {...props} setLinear={setLinear} setIsInfo={setIsInfo(false)} setSearchKey={setSearchKey} searchKey={searchKey} />} />
-                                    <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} />} />
+                                    <Route path="/auth" exact render={props => <Auth {...props} setLinear={setLinear} setErrors={setErrors} setSuccess={setSuccess} />} />
                                     <Route path="/chat" exact render={props => <Chat {...props} setLinear={setLinear} />} />
                                     <Route path="/info" exact render={props => <Info {...props} setLinear={setLinear} setIsInfo={setIsInfo} setSearchKey={setSearchKey} searchKey={searchKey} />} />
                                     <Route path="/see/:id" exact render={props => <See {...props} setLinear={setLinear} />} />

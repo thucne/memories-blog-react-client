@@ -5,8 +5,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+
 // import FileBase from 'react-file-base64';
 
 import useStyles from './styles';
@@ -31,9 +30,6 @@ dotenv.config();
 
 const inititalState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '', invitationCode: '' };
 
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const Auth = (props) => {
     const classes = useStyles();
@@ -43,19 +39,14 @@ const Auth = (props) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const [progress, setProgress] = useState(false);
-    const [errors, setErrors] = useState(undefined);
-    const [success, setSuccess] = useState(undefined);
     const [showStepper, setShowStepper] = useState(false);
     const [doneCreate, setDoneCreate] = useState(false);
     const [result, setResult] = useState('');
     const [token, setToken] = useState('');
-    const [showGG, setShowGG] = useState(false);
-    const user = JSON.parse(localStorage.getItem('profile')) === null;
-    const [ok, setOk] = useState(false);
+    const user = JSON.parse(localStorage.getItem('profile'));
+    const tempSession = JSON.parse(localStorage.getItem('tempSession'));
 
-    const { setLinear } = props;
-
-    useSelector((state) => state.auth).then((result) => { if (!result.authData) { setShowGG(true) } else { setShowGG(false) } });
+    const { setLinear, setErrors, setSuccess } = props;
 
     const handleCallBack = (res) => {
         const decodedObject = jwt_decode(res.credential);
@@ -71,33 +62,29 @@ const Auth = (props) => {
                 name: decodedObject.name
             }
         }
+        // history.push('/');
 
-        googleSuccess(prepare);
-        return;
-    }
-
-    const check = async () => {
-        if (!user) setShowGG(false);
-        if (user) setShowGG(true);
+        return googleSuccess(prepare);
     }
 
     useEffect(() => {
-        async function run() {
-            await check();
-            if (google !== undefined && showGG && !ok) {
-                google.accounts.id.initialize({
-                    client_id: process.env.REACT_APP_GG_CLIENTID,
-                    callback: handleCallBack
-                });
-                google.accounts.id.prompt(notification => {
-                    if (notification.isNotDisplayed()) {
-                        console.log(notification.getNotDisplayedReason());
-                    }
-                })
-            }
-        }
 
-        run();
+        if (user) {
+            history.push('/');
+            return <></>;
+        }
+        if (!user && google && !tempSession) {
+
+            google.accounts.id.initialize({
+                client_id: process.env.REACT_APP_GG_CLIENTID,
+                callback: handleCallBack
+            });
+            google.accounts.id.prompt(notification => {
+                if (notification.isNotDisplayed()) {
+                    console.log(notification.getNotDisplayedReason());
+                }
+            })
+        }
     })
 
     const noti = useSelector((state) => {
@@ -108,9 +95,6 @@ const Auth = (props) => {
     });
 
     const submitData = () => {
-
-        setShowGG(false);
-        setOk(true);
 
         if (isSignup) {
             dispatch(signup(formData, history)).then((result) => {
@@ -123,6 +107,8 @@ const Auth = (props) => {
                         }
                     }, 1000);
                     setErrors(result);
+                    localStorage.removeItem('tempSession');
+
                 } else {
                     setSuccess({ message: 'Create succesfully!' });
                     setTimeout(() => {
@@ -131,7 +117,7 @@ const Auth = (props) => {
                             setLinear(false);
                         }
                         history.push('/');
-                        return <></>
+
                     }, 200);
                 }
             }).catch((error) => {
@@ -156,6 +142,7 @@ const Auth = (props) => {
                     }, 1000);
                     setProgress(false);
                     setErrors(result);
+                    localStorage.removeItem('tempSession');
                 } else {
                     setSuccess({ message: 'Log in successfully!' });
                     // dispatch({ type: 'AUTH', data: result });
@@ -176,22 +163,22 @@ const Auth = (props) => {
                     }
                 }, 1000);
                 setErrors(error);
+                localStorage.removeItem('tempSession');
             });
         }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        localStorage.setItem('tempSession', JSON.stringify({token: 'temptoken'}));
+
         if (setLinear) {
             setLinear(true);
         }
         setProgress(true);
-        setShowGG(false);
-        setOk(true);
+
         window.grecaptcha.ready(() => {
             window.grecaptcha.execute(process.env.REACT_APP_RECAPTCHA, { action: 'submit' }).then(token => {
-                setShowGG(false);
-                setOk(true);
                 submitData();
             });
         });
@@ -212,22 +199,23 @@ const Auth = (props) => {
         const tempResult = res?.profileObj;
         const tempToken = res?.tokenId;
 
-        setShowGG(false);
-        setOk(true);
-
-        setSuccess({ message: 'Welcome to MEmories!' });
+        localStorage.setItem('tempSession', JSON.stringify({token: 'temptoken'}));
 
         try {
+            setSuccess({message: 'Log in successfully! Loading... Please wait!'});
+            setProgress(true);
+            
             dispatch(checkEmail(tempResult.email)).then((result) => {
 
                 if (!result.message) {
-                    dispatch({ type: 'AUTH', data: { result: tempResult, token: tempToken } });
+                    setSuccess({ message: 'Done! Welcome to MEmories!' });
 
+                    dispatch({ type: 'AUTH', data: { result: tempResult, token: tempToken } });
+                    setProgress(false);
+                    if (setLinear) {
+                        setLinear(false);
+                    }
                     setTimeout(() => {
-                        setProgress(false);
-                        if (setLinear) {
-                            setLinear(false);
-                        }
                         history.push('/');
                     }, 200);
 
@@ -267,14 +255,6 @@ const Auth = (props) => {
         setErrors({ message: 'Something went wrong with this kind of log in (Google account)!' });
     }
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setErrors(undefined);
-        setSuccess(undefined);
-    };
 
     const handleFileRead = async (event) => {
         const file = event.target.files[0]
@@ -298,25 +278,18 @@ const Auth = (props) => {
     return (
         <Container component="main" maxWidth="xs">
             <MetaTags>
-                    <title id='thuc1'>MEmories</title>
-                    <meta id='thuc2' name="title" content="MEmories" />
-                    <meta id='thuc3' name="description" content="A small place for your MEmories!" />
+                <title id='thuc1'>MEmories</title>
+                <meta id='thuc2' name="title" content="MEmories" />
+                <meta id='thuc3' name="description" content="A small place for your MEmories!" />
 
-                    <meta id='thuc4' property="og:type" content="website" />
-                    <meta id='thuc5' property="og:url" content="https://oopsmemories.site/" />
-                    <meta id='thuc6' property="og:title" content="MEmories [Facebook version]" />
-                    <meta id='thuc7' property="og:description" content="A small place for your MEmories!" />
-                    <meta id='thuc8' property="og:image"
-                        content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619876083/178838090_426441418795355_3180472797909818372_n_gypmjd.png" />
+                <meta id='thuc4' property="og:type" content="website" />
+                <meta id='thuc5' property="og:url" content="https://oopsmemories.site/" />
+                <meta id='thuc6' property="og:title" content="MEmories [Facebook version]" />
+                <meta id='thuc7' property="og:description" content="A small place for your MEmories!" />
+                <meta id='thuc8' property="og:image"
+                    content="https://res.cloudinary.com/katyperrycbt/image/upload/v1619876083/178838090_426441418795355_3180472797909818372_n_gypmjd.png" />
 
-                </MetaTags>
-            {
-                <Snackbar open={(errors !== undefined || success !== undefined)} autoHideDuration={2000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity={errors ? 'error' : 'success'}>
-                        {errors?.message || success?.message}
-                    </Alert>
-                </Snackbar>
-            }
+            </MetaTags>
             {
                 noti.length ? <ModalNotification noti={noti} /> : <></>
             }
@@ -331,7 +304,7 @@ const Auth = (props) => {
                                 <LockOutlinedIcon />
                             </Avatar>
                             <Typography variant="h5">{isSignup ? 'Sign up' : 'Sign in'}</Typography>
-                            <form className={classes.form} onSubmit={handleSubmit}>
+                            <form className={classes.form} onSubmit={(e) => handleSubmit(e)}>
                                 <Grid container spacing={2}>
                                     {
                                         isSignup && (
