@@ -69,41 +69,43 @@ const MyPost = ({ setLinear, currentId, setCurrentId }) => {
                 </CardContent>
             </Card> :
             <>
-                <Container style={{ margin: '10px 0px 10px 0px' }}>
+                <Container style={{ margin: '10px 0px 10px 0px', padding: '2px' }}>
                     <Grid className={classes.mainGrid} container justify="space-between" alignItems="stretch" spacing={3}>
                         <Grid item xs={12} sm={12} md={12} >
-                            <Grid className={classes.container} container alignItems="stretch" spacing={3}>
-                                <Grid item xs={12} sm={6} md={4}>
+                            <Container maxWidth='sm' style={{ padding: 0 }}>
+                                <Grid className={classes.container} container alignItems="stretch" spacing={3}>
+                                    <Grid item xs={12} sm={12} md={12}>
+                                        {
+                                            isLoad ? <CircularProgress color="secondary" /> : <Form currentId={currentId} setCurrentId={setCurrentId} setLinear={setLinear} setIsLoad={setIsLoad} />
+                                        }
+                                    </Grid>
+                                    {posts.sort((a, b) => { return (new Date(b.createdAt) - new Date(a.createdAt)) }).map((post) => (
+                                        <Grid key={post._id} item xs={12} sm={12} md={12}>
+                                            <Post post={post} setCurrentId={setCurrentId} />
+                                        </Grid>
+                                    ))}
                                     {
-                                        isLoad ? <CircularProgress color="secondary" /> : <Form currentId={currentId} setCurrentId={setCurrentId} setLinear={setLinear} setIsLoad={setIsLoad} />
+                                        posts.length === 0 && <Grid key={'123456a'} item xs={12} sm={12} md={12}>
+                                            <Post post={
+                                                {
+                                                    tags: ['MEmories'],
+                                                    likes: [],
+                                                    title: 'No Data!',
+                                                    message: 'Oops! You have no post. Try to create the first one',
+                                                    name: 'MEmories',
+                                                    creator: '123456',
+                                                    createdAt: '0000-03-07T09:45:48.790+00:00',
+                                                    creatorAvt: 'http://res.cloudinary.com/katyperrycbt/image/upload/v1618987296/photo_fyxf36.png',
+                                                    selectedFile: 'http://res.cloudinary.com/katyperrycbt/image/upload/v1619163349/logo_knvpam.png',
+                                                    oops: false,
+                                                    modified: false,
+                                                    __v: 0,
+                                                    _id: '123456789'
+                                                }} setCurrentId={'setCurrentId'} setLinear={setLinear} />
+                                        </Grid>
                                     }
                                 </Grid>
-                                {posts.sort((a, b) => { return (new Date(b.createdAt) - new Date(a.createdAt)) }).map((post) => (
-                                    <Grid key={post._id} item xs={12} sm={6} md={4}>
-                                        <Post post={post} setCurrentId={setCurrentId} />
-                                    </Grid>
-                                ))}
-                                {
-                                    posts.length === 0 && <Grid key={'123456a'} item xs={6} sm={4} md={4}>
-                                    <Post post={
-                                        {
-                                            tags: ['MEmories'],
-                                            likes: [],
-                                            title: 'No Data!',
-                                            message: 'Oops! You have no post. Try to create the first one',
-                                            name: 'MEmories',
-                                            creator: '123456',
-                                            createdAt: '0000-03-07T09:45:48.790+00:00',
-                                            creatorAvt: 'http://res.cloudinary.com/katyperrycbt/image/upload/v1618987296/photo_fyxf36.png',
-                                            selectedFile: 'http://res.cloudinary.com/katyperrycbt/image/upload/v1619163349/logo_knvpam.png',
-                                            oops: false,
-                                            modified: false,
-                                            __v: 0,
-                                            _id: '123456789'
-                                        }} setCurrentId={'setCurrentId'} setLinear={setLinear} />
-                                </Grid>
-                                }
-                            </Grid>
+                            </Container>
                         </Grid>
                     </Grid>
                 </Container>

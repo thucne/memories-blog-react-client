@@ -17,6 +17,13 @@ import { green } from '@material-ui/core/colors';
 import { getInvitationCode } from '../../actions/invite';
 import { useDispatch } from 'react-redux';
 
+import Snackbar from '@material-ui/core/Snackbar';
+
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 dotenv.config();
 
 const useStyles = makeStyles((theme) => ({
@@ -923,9 +930,11 @@ const SendEmail = ({ open, setOpen, setLinear }) => {
 	const classes = useStyles();
 	const [success, setSuccess] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
-
+	const [admin, setAdmin] = useState(false);
 	const user = JSON.parse(localStorage.getItem('profile'));
 	const html = invitationTemplate(new Date(), '');
+	const [errors, setErrors] = useState(undefined);
+	const [success2, setSuccess2] = useState(undefined);
 
 	const dispatch = useDispatch();
 
@@ -952,22 +961,38 @@ const SendEmail = ({ open, setOpen, setLinear }) => {
 	// `
 
 	const handleChange = (e) => {
+		if (e.target.name === 'html') {
+			setAdmin(true);
+		}
 		setEmailData({ ...emailData, [e.target.name]: e.target.value });
 	}
 
 	const submitData = (mg, data) => {
-		dispatch(getInvitationCode()).then((result) => {
-			mg.messages().send({ ...data, html: invitationTemplate(new Date(), result.invitationCode) }, function (error, body) {
+		if (!admin) {
+			dispatch(getInvitationCode()).then((result) => {
+				mg.messages().send({ ...data, html: invitationTemplate(new Date(), result.invitationCode) }, function (error, body) {
+					setSuccess(true);
+					setLoading(false);
+					setLinear(false);
+					if (error) setErrors(error);
+					if (body) setSuccess2({message: 'Send successfully!'});
+				});
+			}).catch((err) => {
+				console.log('result', err);
 				setSuccess(true);
 				setLoading(false);
 				setLinear(false);
+				if (err) setErrors(err);
 			});
-		}).catch((err) => {
-			console.log('result', err);
-			setSuccess(true);
-			setLoading(false);
-			setLinear(false);
-		});
+		} else {
+			mg.messages().send({ ...data }, function (error, body) {
+				setSuccess(true);
+				setLoading(false);
+				setLinear(false);
+				if (error) setErrors(error);
+				if (body) setSuccess2({message: 'Send successfully!'});
+			})
+		}
 	}
 
 	const sendMail = () => {
@@ -996,9 +1021,24 @@ const SendEmail = ({ open, setOpen, setLinear }) => {
 		}
 	};
 
+	const handleClose2 = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setErrors(undefined);
+		setSuccess2(undefined);
+	};
 
 	return (
 		<div>
+			{
+				<Snackbar open={(errors !== undefined || success2 !== undefined)} autoHideDuration={2000} onClose={handleClose2}>
+					<Alert onClose={handleClose2} severity={errors ? 'error' : 'success'}>
+						{errors?.message || success2?.message}
+					</Alert>
+				</Snackbar>
+			}
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Send mail</DialogTitle>
 				<DialogContent>

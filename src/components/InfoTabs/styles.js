@@ -4,8 +4,9 @@ export default makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         width: '100%',
-        backgroundColor: theme.palette.background.paper,
+        background: 'rgba(197, 202, 233, 0.63)',
         borderRadius: '5px',
+        
     },
     button: {
         background: 'linear-gradient(45deg, #2AB929 30%, #71F337 90%)',

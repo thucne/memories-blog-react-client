@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Paper } from '@material-ui/core';
+import { Container, Paper } from '@material-ui/core';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import EditIcon from '@material-ui/icons/Edit';
 import useStyles from './styles';
@@ -51,26 +51,29 @@ const InfoTabs = (props) => {
     };
 
     return (
-        <Paper className={classes.root}>
-            <Tabs
-                value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="auto"
-            >
-                <Tab label="Your memories" icon={<LibraryBooksIcon />} />
-                <Tab label="Edit your info" icon={<EditIcon />} onClick={clickInfo} />
-                <Tab label="Change password" icon={<VpnKeyIcon />} onClick={clickInfo} />
-                <Tab label="Update your posts" icon={<CachedIcon />} onClick={updatePost} />
-            </Tabs>
-            {
-                value === 0 ?
-                    <MyPost setLinear={setLinear} currentId={currentId} setCurrentId={setCurrentId} /> :
-                    (value === 1 ? <MyInfo setLinear={setLinear} /> : ( value === 2 ? <ChangePassword setLinear={setLinear} /> : <MyPost setLinear={setLinear} currentId={currentId} setCurrentId={setCurrentId} />))
-            }
-        </Paper>
+        <Container maxWidth='md'>
+            <Paper className={classes.root} elevation={0}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="scrollable"
+                    scrollButtons="auto"        
+                    style={{ background: 'white', borderRadius: '10px' }}
+                >
+                    <Tab label="Your memories" icon={<LibraryBooksIcon />} />
+                    <Tab label="Edit your info" icon={<EditIcon />} onClick={clickInfo} />
+                    <Tab label="Change password" icon={<VpnKeyIcon />} onClick={clickInfo} />
+                    <Tab label="Update your posts" icon={<CachedIcon />} onClick={updatePost} />
+                </Tabs>
+                {
+                    value === 0 ?
+                        <MyPost setLinear={setLinear} currentId={currentId} setCurrentId={setCurrentId} /> :
+                        (value === 1 ? <MyInfo setLinear={setLinear} /> : (value === 2 ? <ChangePassword setLinear={setLinear} /> : <MyPost setLinear={setLinear} currentId={currentId} setCurrentId={setCurrentId} />))
+                }
+            </Paper>
+        </Container>
     );
 }
 
