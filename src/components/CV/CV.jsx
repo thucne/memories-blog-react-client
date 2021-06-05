@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Container, Grid } from "@material-ui/core";
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import MetaTags from 'react-meta-tags';
 
 // import useStyles from './styles';
 
 const CV = () => {
     const [open, setOpen] = useState(false);
-    const history = useHistory();
+    // const history = useHistory();
     // const classes = useStyles();
-    const user = JSON.parse(localStorage.getItem('profile'));
+    // const user = JSON.parse(localStorage.getItem('profile'));
 
-    if (!user) { history.push('/auth') }
+    // if (!user) { history.push('/auth') }
 
     useEffect(() => {
         setTimeout(() => {
