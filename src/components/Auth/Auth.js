@@ -69,10 +69,10 @@ const Auth = (props) => {
 
     useEffect(() => {
 
-        if (user) {
-            history.push('/');
-            return <></>;
-        }
+        // if (user) {
+        //     history.push('/');
+        //     return <></>;
+        // }
         if (!user && google && !tempSession) {
 
             google.accounts.id.initialize({
@@ -208,7 +208,7 @@ const Auth = (props) => {
             setProgress(true);
             
             dispatch(checkEmail(tempResult.email)).then((result) => {
-
+                console.log('check mail', result);
                 if (!result.message) {
                     setSuccess({ message: 'Done! Welcome to MEmories!' });
 

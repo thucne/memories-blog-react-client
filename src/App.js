@@ -42,7 +42,7 @@ const App = () => {
     const user = JSON.parse(localStorage.getItem('profile'));
 
     useEffect(() => {
-        if (user && !user?.token && user?.result) {
+        if (user && !user?.token && user?.result && (window.location.href.indexOf('auth') < 0)) {
             setShowAlert(true);
             const timer = setInterval(() => {
                 setClosedIn((oldProgress) => {

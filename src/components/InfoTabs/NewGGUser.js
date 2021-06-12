@@ -145,7 +145,7 @@ export default function NewGGUser({ setSuccess, setErrors, disableCancelButton, 
                         }
                         <InputEdit name="password" label="Password" handleChange={handleChange} xs={6} type="password" />
                         <InputEdit name="confirmPassword" label="Repeat Password" handleChange={handleChange} xs={6} type="password" />
-                        <InputEdit name="invitationCode" label="Invitation Code" handleChange={handleChange} xs={6} type="text" />
+                        <InputEdit name="invitationCode" label="Invitation Code (in your invitation email or contact katyperrycbt@gmail.com)" handleChange={handleChange} xs={6} type="text" />
                         <DialogActions>
                             <Button onClick={handleClose} style={{ display: disableCancelButton ? 'none' : '' }} color="primary">
                                 Cancel
